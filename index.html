@@ -1,0 +1,2115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>강원특별자치도교육청 전보희망원(관외) 작성 도우미</title>
+  
+  <!-- React and ReactDOM CDNs -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  
+  <!-- Babel CDN for compiling JSX in browser -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Google Fonts for premium look -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Batang&family=Nanum+Myeongjo:wght@400;700;800&family=Outfit:wght@300;400;600;700&family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="root" style="height: 100%;"></div>
+
+  <script type="text/babel">
+    const { useState, useMemo } = React;
+
+    /* ------------------------------------------------------------------ */
+    /* 간단한 SVG 아이콘 컴포넌트 구현 (Lucide-react 대체)                   */
+    /* ------------------------------------------------------------------ */
+    const Printer = ({ size = 16, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+        <rect x="6" y="14" width="12" height="8"></rect>
+      </svg>
+    );
+
+    const Download = ({ size = 16, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+      </svg>
+    );
+
+    const Upload = ({ size = 16, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="17 8 12 3 7 8"></polyline>
+        <line x1="12" y1="3" x2="12" y2="15"></line>
+      </svg>
+    );
+
+    const RotateCcw = ({ size = 16, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+        <polyline points="3 3 3 8 8 8"></polyline>
+      </svg>
+    );
+
+    const Plus = ({ size = 16, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+    );
+
+    const Trash2 = ({ size = 16, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <polyline points="3 6 5 6 21 6"></polyline>
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        <line x1="10" y1="11" x2="10" y2="17"></line>
+        <line x1="14" y1="11" x2="14" y2="17"></line>
+      </svg>
+    );
+
+    const ChevronDown = ({ size = 16, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    );
+
+    const ChevronUp = ({ size = 16, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    );
+
+    /* ------------------------------------------------------------------ */
+    /* 규정 근거 데이터 (별표1 / 별표2) — 프로토타입용 best-effort 매핑          */
+    /* ------------------------------------------------------------------ */
+    const DISTRICT_ZONES = {
+      "1지구": [
+        { code: "일반지(시동)", label: "춘천·원주·강릉 시동", annual: 12.0, monthly: 1.0 },
+        { code: "일반지(읍면)", label: "일반지 - 읍면", annual: 12.5, monthly: 1.041 },
+        { code: "다,라", label: "특수지 다,라급지", annual: 13.0, monthly: 1.083 },
+        { code: "가,나", label: "특수지 가,나급지", annual: 13.5, monthly: 1.125 },
+        { code: "특", label: "특급지(별표2)", annual: 14.0, monthly: 1.166 },
+      ],
+      "2지구-속초(원감)": [
+        { code: "일반지(읍면)", label: "일반지 - 읍면", annual: 12.5, monthly: 1.041 },
+        { code: "다,라", label: "특수지 다,라급지", annual: 13.0, monthly: 1.083 },
+        { code: "가,나", label: "특수지 가,나급지", annual: 13.5, monthly: 1.125 },
+        { code: "특", label: "특급지(별표2)", annual: 14.0, monthly: 1.166 },
+      ],
+      "3지구": [
+        { code: "일반지", label: "일반지", annual: 13.5, monthly: 1.125 },
+        { code: "다,라", label: "특수지 다,라급지", annual: 14.0, monthly: 1.166 },
+        { code: "가,나", label: "특수지 가,나급지", annual: 14.5, monthly: 1.208 },
+        { code: "특", label: "특급지(별표2)", annual: 15.0, monthly: 1.250 },
+      ],
+      "4지구": [
+        { code: "일반지", label: "일반지", annual: 14.5, monthly: 1.208 },
+        { code: "다,라", label: "특수지 다,라급지", annual: 15.0, monthly: 1.250 },
+        { code: "가,나", label: "특수지 가,나급지", annual: 15.5, monthly: 1.291 },
+        { code: "특", label: "특급지(별표2)", annual: 16.0, monthly: 1.333 },
+      ],
+    };
+
+    const REASON_PRESETS = [
+      "도지침 4-1)-①",
+      "도지침 4-1)-③",
+      "직접 입력",
+    ];
+
+    const RESEARCH_TYPES = [
+      { label: "연구점수 전국1등급", score: 2.0 },
+      { label: "연구점수 전국2등급", score: 1.5 },
+      { label: "연구점수 전국3등급", score: 1.25 },
+      { label: "연구점수 도1등급", score: 1.0 },
+      { label: "연구점수 도2등급", score: 0.75 },
+      { label: "연구점수 도3등급", score: 0.5 },
+      { label: "박사(직무관련)", score: 4.0 },
+      { label: "석사(직무관련)", score: 2.0 },
+      { label: "박사(기타)", score: 2.0 },
+      { label: "석사(기타)", score: 1.0 },
+    ];
+
+    const AWARD_TYPES = [
+      { label: "훈·포장", score: 2.5 },
+      { label: "대통령표창", score: 2.0 },
+      { label: "국무총리표창", score: 1.5 },
+      { label: "장관표창", score: 1.0 },
+      { label: "교육감표창", score: 0.75 },
+      { label: "교육장표창", score: 0.5 },
+    ];
+
+    const DEMERIT_TYPES = [
+      { label: "강등", score: -5 },
+      { label: "정직", score: -4 },
+      { label: "감봉", score: -3 },
+      { label: "견책", score: -2 },
+      { label: "불문경고", score: -1 },
+      { label: "행정경고", score: -1 },
+    ];
+
+    const OTHER_TYPES = [
+      { label: "단설유치원근무교사", score: 0.5, cap: 2.5 },
+      { label: "통합학급담당교사", score: 0.5, cap: 2.5 },
+      { label: "신설유치원개원업무", score: 1.0, cap: 1.0 },
+      { label: "순회교사", score: 0.5, cap: 2.5 },
+      { label: "부장교사", score: 0.5, cap: 2.5 },
+      { label: "겸임교사", score: 0.5, cap: 2.5 },
+      { label: "영재교육원지도교사", score: 0.25, cap: 1.0 },
+    ];
+
+    const OTHER_LIMITS = {
+      "단설유치원근무교사": 2.5,
+      "통합학급담당교사": 2.5,
+      "신설유치원개원업무": 1.0,
+      "순회교사": 2.5,
+      "부장교사": 2.5,
+      "겸임교사": 2.5,
+      "영재교육원지도교사": 1.0,
+      "연구유치원": 1.0,
+      "교육실습협력유치원": 1.0,
+    };
+
+    const BONUS_PRESETS = [
+      { label: "1.표창", score: 2.5 },
+      { label: "2.연구실적", score: 1.0 },
+      { label: "3.연구유치원", score: 0.375 },
+      { label: "4.교육실습협력유치원", score: 0.5 },
+      { label: "5.우대", score: 1.0 },
+      { label: "7.장기근속", score: 0.5 },
+      { label: "8.기타(호봉)", score: 0 },
+      { label: "감점", score: -1.0 },
+    ];
+
+    const uid = () =>
+      (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2));
+
+    /* ------------------------------------------------------------------ */
+    /* 계산 유틸                                                             */
+    /* ------------------------------------------------------------------ */
+    function getCalendarDiff(startStr, endStr) {
+      if (!startStr || !endStr) return { years: 0, months: 0, days: 0 };
+      const s = new Date(startStr + "T00:00:00");
+      const e = new Date(endStr + "T00:00:00");
+      if (isNaN(s) || isNaN(e) || e < s) return { years: 0, months: 0, days: 0 };
+      
+      // 역에 의해 기간 계산 시 마지막 일까지 포함하므로 1일을 더함
+      const eObj = new Date(e.getTime() + 86400000);
+      
+      let y = eObj.getFullYear() - s.getFullYear();
+      let m = eObj.getMonth() - s.getMonth();
+      let d = eObj.getDate() - s.getDate();
+      
+      if (d < 0) {
+        m -= 1;
+        const prevMonth = new Date(eObj.getFullYear(), eObj.getMonth(), 0);
+        d += prevMonth.getDate();
+      }
+      if (m < 0) {
+        y -= 1;
+        m += 12;
+      }
+      return { years: y, months: m, days: d };
+    }
+
+    function getNetCalendarPeriod(cStartStr, cEndStr, dispatches) {
+      if (!cStartStr || !cEndStr) return { years: 0, months: 0, days: 0 };
+      const careerDiff = getCalendarDiff(cStartStr, cEndStr);
+      if (careerDiff.years === 0 && careerDiff.months === 0 && careerDiff.days === 0) {
+        return careerDiff;
+      }
+
+      let overlapY = 0;
+      let overlapM = 0;
+      let overlapD = 0;
+
+      for (const d of dispatches) {
+        if (!d.start || !d.end) continue;
+        const cs = new Date(cStartStr + "T00:00:00");
+        const ce = new Date(cEndStr + "T00:00:00");
+        const ds = new Date(d.start + "T00:00:00");
+        const de = new Date(d.end + "T00:00:00");
+
+        const os = new Date(Math.max(cs, ds));
+        const oe = new Date(Math.min(ce, de));
+        if (os <= oe) {
+          const osStr = os.toISOString().split('T')[0];
+          const oeStr = oe.toISOString().split('T')[0];
+          const overlapDiff = getCalendarDiff(osStr, oeStr);
+          overlapY += overlapDiff.years;
+          overlapM += overlapDiff.months;
+          overlapD += overlapDiff.days;
+        }
+      }
+
+      let netY = careerDiff.years - overlapY;
+      let netM = careerDiff.months - overlapM;
+      let netD = careerDiff.days - overlapD;
+
+      if (netD < 0) {
+        netM -= 1;
+        netD += 30; // 간소화된 30일 환산
+      }
+      if (netM < 0) {
+        netY -= 1;
+        netM += 12;
+      }
+      if (netY < 0) return { years: 0, months: 0, days: 0 };
+      return { years: netY, months: netM, days: netD };
+    }
+
+    function formatDateStr(dateStr) {
+      if (!dateStr) return "";
+      let clean = dateStr.replace(/-/g, ".").trim();
+      if (clean && !clean.endsWith(".")) {
+        clean += ".";
+      }
+      return clean;
+    }
+
+    function formatSchoolTitle(schoolName, teacherType) {
+      const raw = (schoolName || "").trim();
+      if (!raw) return teacherType === "유치원교사" ? "○○유치원장" : "○○초등학교장";
+
+      if (teacherType === "유치원교사") {
+        if (raw.endsWith("유치원")) {
+          return raw + "장";
+        }
+        if (raw.endsWith("유")) {
+          return raw.slice(0, -1) + "유치원장";
+        }
+        return raw + "유치원장";
+      } else {
+        if (raw.endsWith("초등학교")) {
+          return raw + "장";
+        }
+        if (raw.endsWith("초")) {
+          return raw.slice(0, -1) + "초등학교장";
+        }
+        return raw + "초등학교장";
+      }
+    }
+
+    function floor3(n) {
+      const val = Number(n);
+      if (!Number.isFinite(val)) return 0;
+      return Math.floor(val * 1000 + 1e-9) / 1000;
+    }
+
+    function fmt(n) {
+      const val = Number(n);
+      if (!Number.isFinite(val)) return "0";
+      const r = floor3(val);
+      if (r < 0) {
+        return "△" + Math.abs(r).toString();
+      }
+      return r.toString();
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* 초기 상태                                                             */
+    /* ------------------------------------------------------------------ */
+    const initialState = {
+      schoolYear: 2027,
+      teacherType: "유치원교사",
+      applicant: {
+        schoolName: "",
+        name: "",
+        gender: "여",
+        birthDate: "",
+        salaryStep: "",
+        totalCareerYears: "",
+        currentCountyYears: "",
+        currentSchoolYears: "",
+      },
+      districtExpired: false,
+      prefs: {
+        p1: { county: "", school1: "", school2: "" },
+        p2: { county: "" },
+        p3: { county: "" },
+        p4: { county: "" },
+      },
+      flags: {
+        livingBase: "",
+        nationalSchoolWish: false,
+        invitedTeacherApply: false,
+        otherProvinceApply: false,
+        englishTraining: false,
+        specialProvision: false,
+        specialDetail: "",
+        deferralProvision: false,
+        deferralDetail: "",
+      },
+      transferReason: REASON_PRESETS[1],
+      transferReasonCustom: "",
+      family: [],
+      careers: [
+        {
+          id: uid(),
+          schoolName: "",
+          start: "",
+          end: "",
+          district: "1지구",
+          zone: "일반지(시동)"
+        }
+      ],
+      dispatches: [],
+      bonuses: [
+        {
+          id: uid(),
+          date: "",
+          type: "훈·포장",
+          score: 2.5,
+          inputMode: "single",
+          start: "",
+          end: "",
+          annualScore: 2.5,
+          isModelCivilServant: false,
+        }
+      ],
+      confirmation: { date: "", reviewer: "", principal: "" },
+    };
+
+    const SAMPLE_DATA = {
+      "schoolYear": "2027",
+      "teacherType": "유치원교사",
+      "applicant": {
+        "schoolName": "한빛유치원",
+        "name": "김나라",
+        "gender": "남",
+        "birthDate": "761101",
+        "salaryStep": "32",
+        "totalCareerYears": "20.00",
+        "currentCountyYears": "10",
+        "currentSchoolYears": "4.00"
+      },
+      "districtExpired": true,
+      "prefs": {
+        "p1": {
+          "county": "동해",
+          "school1": "바다유",
+          "school2": "소라유"
+        },
+        "p2": {
+          "county": "삼척"
+        },
+        "p3": {
+          "county": "양양"
+        },
+        "p4": {
+          "county": "평창"
+        }
+      },
+      "flags": {
+        "livingBase": "강릉",
+        "nationalSchoolWish": false,
+        "invitedTeacherApply": false,
+        "otherProvinceApply": true,
+        "englishTraining: false": false,
+        "specialProvision": false,
+        "specialDetail": "",
+        "deferralProvision": false,
+        "deferralDetail": ""
+      },
+      "transferReason": "도지침 4-1)-①",
+      "transferReasonCustom": "",
+      "family": [
+        {
+          "id": "68b78911-b1a5-43a7-a2ac-d881f4c0538c",
+          "affiliation": "동해 고래유치원",
+          "position": "교사",
+          "name": "이사랑"
+        }
+      ],
+      "careers": [
+        {
+          "id": "e344cb63-3820-4924-8df1-83aac43d7ba9",
+          "schoolName": "한빛유치원",
+          "start": "2023-03-01",
+          "end": "2027-02-28",
+          "district": "1지구",
+          "zone": "일반지(읍면)"
+        },
+        {
+          "id": "ce09c50e-46d1-4e7f-83d2-5894c1c4f729",
+          "schoolName": "두빛유치원",
+          "start": "2021-03-01",
+          "end": "2023-02-28",
+          "district": "1지구",
+          "zone": "일반지(시동)"
+        }
+      ],
+      "dispatches": [
+        {
+          "id": "c424ecfd-8565-42be-8c33-5a4124534c17",
+          "type": "휴직(육아)",
+          "org": "두빛유치원",
+          "start": "2022-03-01",
+          "end": "2023-02-28"
+        }
+      ],
+      "bonuses": [
+        {
+          "id": "2c5d4156-b536-4efc-807d-c3159df3dad6",
+          "date": "2015-05-15",
+          "type": "장관표창",
+          "score": 1,
+          "inputMode": "single",
+          "start": "",
+          "end": "",
+          "annualScore": 1,
+          "isModelCivilServant": false
+        },
+        {
+          "id": "cb4ed3fe-af05-40cc-a361-51f31903cd81",
+          "date": "2021-06-18",
+          "type": "연구점수 전국2등급",
+          "score": 0.75,
+          "inputMode": "single",
+          "start": "",
+          "end": "",
+          "annualScore": 0.75,
+          "isModelCivilServant": false
+        },
+        {
+          "id": "1958182e-61ef-4f3d-9266-b96c2fb19299",
+          "date": "",
+          "type": "연구유치원",
+          "score": 0.375,
+          "inputMode": "period",
+          "start": "2023-03-01",
+          "end": "2024-02-29",
+          "annualScore": 0.375,
+          "isModelCivilServant": false
+        },
+        {
+          "id": "9a88af46-ca55-4a04-9cf5-4600aa2b0213",
+          "date": "",
+          "type": "교육실습협력유치원",
+          "score": 0.5,
+          "inputMode": "period",
+          "start": "2025-03-01",
+          "end": "2026-02-28",
+          "annualScore": 0.5,
+          "isModelCivilServant": false
+        },
+        {
+          "id": "3c4e7c97-a44b-4b4a-b1e9-76e57c0b6a5c",
+          "date": "",
+          "type": "장기근속",
+          "score": 0.5,
+          "inputMode": "period",
+          "start": "2016-03-01",
+          "end": "2021-02-28",
+          "annualScore": 0.5,
+          "isModelCivilServant": false
+        },
+        {
+          "id": "81b382cd-9b5c-4117-ace8-428c4548beed",
+          "date": "2027-01-01",
+          "type": "호봉(32)",
+          "score": 1.6,
+          "inputMode": "single",
+          "start": "",
+          "end": "",
+          "annualScore": 1.6,
+          "isModelCivilServant": false
+        },
+        {
+          "id": "c008a500-d90e-4310-8eac-53544e341c4a",
+          "date": "2024-10-16",
+          "type": "불문경고",
+          "score": "-1",
+          "inputMode": "single",
+          "start": "",
+          "end": "",
+          "annualScore": -1,
+          "isModelCivilServant": false
+        }
+      ],
+      "confirmation": {
+        "date": "2026-12-10",
+        "reviewer": "김나라",
+        "principal": "김원장"
+      }
+    };
+
+    /* ------------------------------------------------------------------ */
+    /* 재사용 UI 조각                                                        */
+    /* ------------------------------------------------------------------ */
+    function Section({ title, children, defaultOpen = true, required }) {
+      const [open, setOpen] = useState(defaultOpen);
+      return (
+        <div className="tp-section">
+          <button type="button" className="tp-section-header" onClick={() => setOpen((o) => !o)}>
+            <span>
+              {title}
+              {required && <em className="tp-req">*</em>}
+            </span>
+            {open ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </button>
+          {open && <div className="tp-section-body">{children}</div>}
+        </div>
+      );
+    }
+
+    function Field({ label, children, hint }) {
+      return (
+        <label className="tp-field">
+          <span className="tp-field-label">{label}</span>
+          {children}
+          {hint && <span className="tp-hint">{hint}</span>}
+        </label>
+      );
+    }
+
+    function RowActions({ onAdd, addLabel }) {
+      return (
+        <button type="button" className="tp-add-btn" onClick={onAdd}>
+          <Plus size={14} /> {addLabel}
+        </button>
+      );
+    }
+
+    /* ==================================================================== */
+    function TransferApplicationPrototype() {
+      const [state, setState] = useState(initialState);
+
+      const [activeImage, setActiveImage] = useState(null);
+
+      const setApplicant = (patch) =>
+        setState((s) => ({ ...s, applicant: { ...s.applicant, ...patch } }));
+      const setFlags = (patch) => setState((s) => ({ ...s, flags: { ...s.flags, ...patch } }));
+      const setConfirmation = (patch) =>
+        setState((s) => ({ ...s, confirmation: { ...s.confirmation, ...patch } }));
+      const setPref = (key, patch) =>
+        setState((s) => ({ ...s, prefs: { ...s.prefs, [key]: { ...s.prefs[key], ...patch } } }));
+
+      /* ---- 반복 테이블 헬퍼 ---- */
+      const addFamily = () =>
+        setState((s) => ({
+          ...s,
+          family: [...s.family, { id: uid(), affiliation: "", position: "", name: "" }],
+        }));
+      const updateFamily = (id, patch) =>
+        setState((s) => ({
+          ...s,
+          family: s.family.map((f) => (f.id === id ? { ...f, ...patch } : f)),
+        }));
+      const removeFamily = (id) =>
+        setState((s) => ({ ...s, family: s.family.filter((f) => f.id !== id) }));
+
+      const addCareer = () =>
+        setState((s) => ({
+          ...s,
+          careers: [
+            ...s.careers,
+            { id: uid(), schoolName: "", start: "", end: "", district: "1지구", zone: DISTRICT_ZONES["1지구"][0].code },
+          ],
+        }));
+      const updateCareer = (id, patch) =>
+        setState((s) => ({
+          ...s,
+          careers: s.careers.map((c) => (c.id === id ? { ...c, ...patch } : c)),
+        }));
+      const removeCareer = (id) =>
+        setState((s) => ({ ...s, careers: s.careers.filter((c) => c.id !== id) }));
+
+      const addDispatch = () =>
+        setState((s) => ({
+          ...s,
+          dispatches: [...s.dispatches, { id: uid(), type: "파견", org: "", start: "", end: "" }],
+        }));
+      const updateDispatch = (id, patch) =>
+        setState((s) => ({
+          ...s,
+          dispatches: s.dispatches.map((d) => (d.id === id ? { ...d, ...patch } : d)),
+        }));
+      const removeDispatch = (id) =>
+        setState((s) => ({ ...s, dispatches: s.dispatches.filter((d) => d.id !== id) }));
+
+      const addBonus = (preset) =>
+        setState((s) => {
+          const isPeriod = preset && (
+            preset.label.includes("년 ") ||
+            preset.label.includes("연구유치원") ||
+            preset.label.includes("3.연구유치원") ||
+            preset.label.includes("교육실습") ||
+            preset.label.includes("4.교육실습협력유치원") ||
+            preset.label.includes("7.장기근속")
+          );
+          const isModel = preset && (preset.label.includes("국무총리표창") || preset.label.includes("교육감표창"));
+          let initialType = preset ? preset.label : "";
+          let initialScore = preset ? preset.score : 0;
+          let initialDate = "";
+          if (initialType === "2.연구실적" || initialType === "연구실적") {
+            initialType = "연구점수 전국1등급";
+          } else if (initialType === "1.표창" || initialType === "표창") {
+            initialType = "훈·포장";
+          } else if (initialType === "3.연구유치원") {
+            initialType = "연구유치원";
+          } else if (initialType === "4.교육실습협력유치원") {
+            initialType = "교육실습협력유치원";
+            initialScore = 0.5;
+          } else if (initialType === "5.우대") {
+            initialType = "우대";
+          } else if (initialType === "7.장기근속") {
+            initialType = "장기근속";
+          } else if (initialType === "8.기타(호봉)") {
+            initialType = "호봉(" + (s.applicant.salaryStep || "") + ")";
+            initialScore = s.applicant.salaryStep ? floor3(Number(s.applicant.salaryStep) * 0.05) : 0;
+            initialDate = (s.schoolYear || 2027) + "-01-01";
+          } else if (initialType === "감점") {
+            initialType = "강등";
+            initialScore = -5;
+          }
+          return {
+            ...s,
+            bonuses: [
+              ...s.bonuses,
+              {
+                id: uid(),
+                date: initialDate,
+                type: initialType,
+                score: initialScore,
+                inputMode: isPeriod ? "period" : "single",
+                start: "",
+                end: "",
+                annualScore: initialScore,
+                isModelCivilServant: isModel ? true : false,
+              },
+            ],
+          };
+        });
+      const updateBonus = (id, patch) =>
+        setState((s) => ({
+          ...s,
+          bonuses: s.bonuses.map((b) => (b.id === id ? { ...b, ...patch } : b)),
+        }));
+      const removeBonus = (id) =>
+        setState((s) => ({ ...s, bonuses: s.bonuses.filter((b) => b.id !== id) }));
+
+      /* ---- 자동 계산 ---- */
+      const careerRows = useMemo(
+        () =>
+          state.careers.map((c) => {
+            const zoneData = DISTRICT_ZONES[c.district]?.find((z) => z.code === c.zone);
+            const annual = zoneData?.annual || 0;
+            const monthly = zoneData?.monthly || 0;
+            const net = getNetCalendarPeriod(c.start, c.end, state.dispatches);
+            
+            // 개별 행 표시용 년/월 계산 (남은 일수가 30일 이상일 때만 개별 행에서 개월로 올림 표기)
+            const normalizedMonths = net.months + Math.floor(net.days / 30);
+            const displayY = net.years + Math.floor(normalizedMonths / 12);
+            const displayM = normalizedMonths % 12;
+            const displayD = net.days % 30; // 자투리 일수
+
+            const score = floor3(displayY * annual + displayM * monthly);
+            return {
+              ...c,
+              years: displayY,
+              months: displayM,
+              days: displayD, // 자투리 일수 전달
+              netYears: net.years,   // 원본 년
+              netMonths: net.months, // 원본 월
+              netDays: net.days,     // 원본 일
+              annual,
+              monthly,
+              score
+            };
+          }),
+        [state.careers, state.dispatches]
+      );
+
+      const careerSubtotal = useMemo(() => {
+        // 그룹(district + zone)별로 원본 기간(년, 월, 일)을 모두 합산한 후 30일=1월 룰을 최종 적용하여 소계를 계산합니다.
+        const groups = {};
+        careerRows.forEach((r) => {
+          const key = `${r.district}_${r.zone}`;
+          if (!groups[key]) {
+            groups[key] = {
+              annual: r.annual,
+              monthly: r.monthly,
+              sumYears: 0,
+              sumMonths: 0,
+              sumDays: 0,
+            };
+          }
+          groups[key].sumYears += r.netYears;
+          groups[key].sumMonths += r.netMonths;
+          groups[key].sumDays += r.netDays;
+        });
+
+        let total = 0;
+        Object.values(groups).forEach((g) => {
+          let m = g.sumMonths + Math.floor(g.sumDays / 30); // 자투리 일수들을 모두 합산하여 30일마다 1월 평정
+          let y = g.sumYears + Math.floor(m / 12);
+          m = m % 12;
+          total += y * g.annual + m * g.monthly;
+        });
+        return floor3(total);
+      }, [careerRows]);
+
+      const dispatchRows = useMemo(
+        () =>
+          state.dispatches.map((d) => {
+            const diff = getCalendarDiff(d.start, d.end);
+            const totalMonths = diff.months + Math.floor(diff.days / 30);
+            const years = diff.years + Math.floor(totalMonths / 12);
+            const months = totalMonths % 12;
+            return { ...d, years, months };
+          }),
+        [state.dispatches]
+      );
+
+      const salaryBonus = 0;
+
+      const computedBonuses = useMemo(
+        () =>
+          state.bonuses.map((b) => {
+            const isResSchool = b.type && b.type.includes("연구학교");
+            let limit = OTHER_LIMITS[b.type];
+            if (isResSchool) limit = 1.0;
+            if (b.inputMode === "period") {
+              const diff = getCalendarDiff(b.start, b.end);
+              const totalMonths = diff.years * 12 + diff.months + Math.floor(diff.days / 30);
+              let parsedScore = floor3((Number(b.annualScore || 0) * totalMonths) / 12);
+              if (limit !== undefined && limit !== null) {
+                parsedScore = Math.min(limit, parsedScore);
+              }
+              const years = Math.floor(totalMonths / 12);
+              const months = Math.floor(totalMonths % 12);
+              return { ...b, parsedScore, years, months };
+            }
+            let parsedScore = Number(b.score) || 0;
+            if (limit !== undefined && limit !== null) {
+              parsedScore = Math.min(limit, parsedScore);
+            }
+            return { ...b, parsedScore };
+          }),
+        [state.bonuses]
+      );
+ 
+      const bonusSubtotal = floor3(
+        (() => {
+          const scoresByType = {};
+          computedBonuses.forEach(b => {
+            const type = b.type || "";
+            const score = Number(b.parsedScore) || 0;
+            let groupKey = type;
+            if (type.includes("연구학교")) {
+              groupKey = "연구학교";
+            }
+            scoresByType[groupKey] = (scoresByType[groupKey] || 0) + score;
+          });
+          let sum = 0;
+          Object.keys(scoresByType).forEach(type => {
+            let score = scoresByType[type];
+            let limit = OTHER_LIMITS[type];
+            if (type === "연구유치원" || type === "연구학교") {
+              limit = 1.0;
+            }
+            if (type === "교육실습협력유치원") {
+              limit = 1.0;
+            }
+            if (limit !== undefined && limit !== null) {
+              score = Math.min(limit, score);
+            }
+            sum += score;
+          });
+          return sum;
+        })()
+      );
+ 
+      const totalScore = floor3(careerSubtotal + bonusSubtotal);
+ 
+      // 서식 실제 레이아웃: 연월일/종별/평정점 2열 배치 후 소계를 오른쪽에 rowSpan으로 병합
+      const bonusItems = useMemo(
+        () => [
+          ...computedBonuses.map((b) => {
+            const displayType = b.isModelCivilServant ? `${b.type}(모범공무원)` : b.type;
+            if (b.inputMode === "period") {
+              const periodStr = b.years > 0 ? (b.months > 0 ? `${b.years}년 ${b.months}월` : `${b.years}년`) : `${b.months}월`;
+              return {
+                id: b.id,
+                date: b.start && b.end ? `${formatDateStr(b.start)}~${formatDateStr(b.end)}` : "-",
+                type: b.start && b.end ? `${displayType || "-"} (${periodStr})` : displayType || "-",
+                score: b.parsedScore,
+              };
+            }
+            return {
+              id: b.id,
+              date: formatDateStr(b.date) || "-",
+              type: displayType || "-",
+              score: b.parsedScore,
+            };
+          }),
+        ],
+        [computedBonuses, salaryBonus, state.schoolYear, state.applicant.salaryStep]
+      );
+      const bonusRowCount = Math.max(3, Math.ceil(bonusItems.length / 2));
+
+      /* ---- 액션 ---- */
+      const loadSampleData = () => {
+        if (confirm("샘플 데이터(전보희망원_김나라_2027)를 불러오시겠습니까? 현재 입력된 내용은 대체됩니다.")) {
+          setState({ ...initialState, ...SAMPLE_DATA });
+        }
+      };
+
+      const resetAll = () => {
+        if (confirm("모든 입력 내용을 초기화할까요? 되돌릴 수 없습니다.")) {
+          setState(initialState);
+        }
+      };
+
+      const exportJSON = () => {
+        const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `전보희망원_${state.applicant.name || "작성중"}_${state.schoolYear}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      };
+
+      const importJSON = (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const data = JSON.parse(reader.result);
+            setState({ ...initialState, ...data });
+          } catch {
+            alert("파일을 읽을 수 없습니다. 올바른 JSON 파일인지 확인해 주세요.");
+          }
+        };
+        reader.readAsText(file);
+        e.target.value = "";
+      };
+
+      const doPrint = () => window.print();
+
+      const missingRequired =
+        !state.applicant.schoolName ||
+        !state.applicant.name ||
+        !state.applicant.birthDate ||
+        !state.applicant.salaryStep ||
+        !state.prefs.p1.county;
+
+      return (
+        <div className="tp-app">
+          <style>{`
+            .tp-app {
+              --ink: #1b2a4a;
+              --ink-soft: #3d4d6e;
+              --slate: #5c6b84;
+              --bg: #eef1f6;
+              --paper: #ffffff;
+              --line: #c7cdd8;
+              --line-strong: #98a2b5;
+              --seal: #b23a2e;
+              --seal-soft: #f3e2df;
+              --ok: #2f7d5a;
+              font-family: "Pretendard", -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+              background: var(--bg);
+              color: var(--ink);
+              min-height: 100%;
+              display: flex;
+              flex-direction: column;
+            }
+            .tp-val {
+              color: #2b5ce7 !important;
+              font-family: "Pretendard", -apple-system, sans-serif;
+              font-weight: bold;
+            }
+            .tp-app * { box-sizing: border-box; }
+            .tp-header {
+              padding: 18px 24px;
+              background: var(--ink);
+              color: #fff;
+            }
+            .tp-header h1 { font-size: 17px; margin: 0; letter-spacing: 0.02em; font-weight: 700; }
+            .tp-header p { margin: 4px 0 0; font-size: 12px; color: #c9d2e6; }
+            .tp-body {
+              flex: 1;
+              display: grid;
+              grid-template-columns: 380px 1fr;
+              gap: 0;
+              min-height: 0;
+            }
+            @media (max-width: 900px) {
+              .tp-body { grid-template-columns: 1fr; }
+            }
+            .tp-sidebar {
+              background: #fff;
+              border-right: 1px solid var(--line);
+              overflow-y: auto;
+              max-height: calc(100vh - 56px);
+              padding-bottom: 90px;
+            }
+            .tp-preview-col {
+              overflow-y: auto;
+              max-height: calc(100vh - 56px);
+              padding: 28px;
+            }
+            .tp-section { border-bottom: 1px solid var(--line); }
+            .tp-section-header {
+              width: 100%;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              padding: 12px 16px;
+              background: #f7f8fb;
+              border: none;
+              font-size: 13px;
+              font-weight: 700;
+              color: var(--ink);
+              cursor: pointer;
+            }
+            .tp-req { color: var(--seal); margin-left: 3px; }
+            .tp-section-body { padding: 12px 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+            .tp-field { display: flex; flex-direction: column; gap: 4px; font-size: 12px; }
+            .tp-field-label { font-weight: 600; color: var(--ink-soft); }
+            .tp-field input[type="text"],
+            .tp-field input[type="number"],
+            .tp-field input[type="date"],
+            .tp-field select,
+            .tp-field textarea {
+              width: 100%;
+              border: 1px solid var(--line);
+              border-radius: 6px;
+              padding: 7px 9px;
+              font-size: 13px;
+              font-family: inherit;
+              color: var(--ink);
+              background: #fff;
+            }
+            .tp-field input:focus, .tp-field select:focus, .tp-field textarea:focus {
+              outline: 2px solid var(--ink-soft);
+              outline-offset: 0;
+            }
+            .tp-hint { font-size: 11px; color: var(--slate); }
+            .tp-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+            .tp-row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+            .tp-toggle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+            .tp-toggle {
+              display: flex; align-items: center; justify-content: space-between;
+              border: 1px solid var(--line); border-radius: 6px; padding: 7px 10px; font-size: 12px;
+            }
+            .tp-switch {
+              position: relative; width: 34px; height: 18px; border-radius: 999px; border: none;
+              background: #d7dbe4; cursor: pointer; flex-shrink: 0;
+            }
+            .tp-switch.on { background: var(--ok); }
+            .tp-switch::after {
+              content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px;
+              border-radius: 50%; background: #fff; transition: transform .15s ease;
+            }
+            .tp-switch.on::after { transform: translateX(16px); }
+            .tp-card {
+              border: 1px solid var(--line); border-radius: 8px; padding: 10px; background: #fafbfd;
+              display: flex; flex-direction: column; gap: 6px; position: relative;
+            }
+            .tp-card-remove {
+              position: absolute; top: 6px; right: 6px; border: none; background: transparent;
+              color: var(--slate); cursor: pointer; padding: 3px;
+            }
+            .tp-card-remove:hover { color: var(--seal); }
+            .tp-score-pill {
+              align-self: flex-start; font-size: 11px; font-weight: 700; color: var(--ink);
+              background: #e7ecf5; padding: 2px 8px; border-radius: 999px;
+            }
+            .tp-add-btn {
+              display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700;
+              color: var(--ink); background: #eef1f6; border: 1px dashed var(--line-strong);
+              border-radius: 6px; padding: 7px 10px; cursor: pointer; align-self: flex-start;
+            }
+            .tp-add-btn:hover { background: #e2e7f0; }
+            .tp-preset-row { display: flex; flex-wrap: wrap; gap: 6px; }
+            .tp-preset-chip {
+              font-size: 11px; border: 1px solid var(--line); background: #fff; border-radius: 999px;
+              padding: 4px 9px; cursor: pointer; color: var(--ink-soft);
+            }
+            .tp-preset-chip:hover { border-color: var(--ink-soft); color: var(--ink); }
+
+            /* ---------- 미리보기(문서) ---------- */
+            .tp-preview-wrap {
+              width: 760px; max-width: 100%; background: var(--paper);
+              box-shadow: 0 2px 18px rgba(27,42,74,0.14);
+              padding: 34px 38px 42px;
+              font-family: "Nanum Myeongjo", "Batang", serif;
+              color: #14213b;
+              margin: 0 auto;
+            }
+            .tp-doc-title { text-align: center; margin-bottom: 4px; }
+            .tp-doc-title .tp-badge {
+              font-size: 11px; letter-spacing: .3em; color: var(--slate); font-family: "Pretendard", -apple-system, sans-serif;
+            }
+            .tp-doc-title h2 { font-size: 22px; margin: 6px 0 2px; letter-spacing: 0.08em; }
+            .tp-doc-sub { text-align:center; font-size: 12px; color: var(--slate); margin-bottom: 16px; font-family: "Pretendard", -apple-system, sans-serif;}
+            table.tp-doc-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin-bottom: 8px; }
+            table.tp-doc-table th, table.tp-doc-table td {
+              border: 1px solid #8b93a6;
+              padding: 2px 4px;
+              text-align: center;
+              vertical-align: middle;
+              height: 24px;
+              box-sizing: border-box;
+            }
+            table.tp-doc-table th {
+              background: #eef1f6;
+              font-weight: 700;
+              font-size: 11px;
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+            table.tp-doc-table td.tp-left { text-align: left; }
+            .tp-doc-section-title {
+              font-size: 12px; font-weight: 700; margin: 16px 0 6px; color: var(--ink);
+              font-family: "Pretendard", -apple-system, sans-serif; display:flex; align-items:center; gap:6px;
+            }
+            .tp-doc-section-title::before { content: ""; width: 3px; height: 12px; background: var(--seal); display:inline-block; }
+            .tp-empty-note { font-size: 11px; color: #a2a9b8; font-style: italic; }
+            .tp-total-row td { font-weight: 800; font-size: 14px; background: #f6ede9; }
+            .tp-confirm {
+              margin-top: 20px; font-size: 12.5px; text-align: center; line-height: 2;
+            }
+            .tp-seal-box { display:flex; justify-content:flex-end; margin-top: 6px; }
+            .tp-seal {
+              width: 78px; height: 78px; border-radius: 50%; border: 2.5px solid var(--seal);
+              color: var(--seal); display:flex; align-items:center; justify-content:center;
+              transform: rotate(-8deg); font-size: 11px; font-weight: 800; text-align:center;
+              line-height: 1.3; font-family: "Pretendard", -apple-system, sans-serif; opacity: .85;
+            }
+            .tp-disclaimer {
+              font-size: 10.5px; color: var(--slate); margin-top: 18px; border-top: 1px dashed var(--line);
+              padding-top: 8px; font-family: "Pretendard", -apple-system, sans-serif;
+            }
+
+            /* ---------- 하단 툴바 ---------- */
+            .tp-toolbar {
+              position: sticky; bottom: 0; left: 0; right: 0;
+              background: #fff; border-top: 1px solid var(--line);
+              display: flex; align-items: center; justify-content: space-between;
+              padding: 10px 16px; gap: 10px;
+            }
+            .tp-total-badge {
+              display: flex; align-items: center; gap: 8px;
+            }
+            .tp-total-circle {
+              width: 44px; height: 44px; border-radius: 50%; border: 2.5px solid var(--seal);
+              color: var(--seal); display:flex; align-items:center; justify-content:center;
+              font-weight: 800; font-size: 13px; transform: rotate(-6deg); flex-shrink:0;
+            }
+            .tp-total-text { font-size: 11px; color: var(--slate); line-height:1.3; }
+            .tp-total-text b { font-size: 13px; color: var(--ink); display:block; }
+            .tp-toolbar-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+            .tp-btn {
+              display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700;
+              border-radius: 7px; padding: 8px 12px; cursor: pointer; border: 1px solid var(--line);
+              background: #fff; color: var(--ink);
+            }
+            .tp-btn:hover { background: #f2f4f8; }
+            .tp-btn.primary { background: var(--ink); border-color: var(--ink); color: #fff; }
+            .tp-btn.primary:hover { background: #263a63; }
+            .tp-file-btn { position: relative; overflow: hidden; }
+            .tp-file-btn input[type=file] {
+              position: absolute; inset: 0; opacity: 0; cursor: pointer;
+            }
+            .tp-warn { font-size: 11px; color: var(--seal); font-weight: 700; }
+
+            /* --- 이미지 모달 CSS --- */
+            .tp-modal-overlay {
+              position: fixed; inset: 0; background: rgba(0,0,0,0.65);
+              display: flex; align-items: center; justify-content: center; z-index: 9999;
+              backdrop-filter: blur(4px);
+            }
+            .tp-modal-content {
+              background: #fff; padding: 20px; border-radius: 12px; max-width: 90%; max-height: 90%;
+              overflow: auto; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            }
+            .tp-modal-close {
+              position: absolute; top: 12px; right: 12px; border: none; background: transparent;
+              font-size: 24px; cursor: pointer; color: var(--slate); font-weight: bold;
+            }
+            .tp-modal-close:hover { color: var(--ink); }
+            .tp-modal-img { max-width: 100%; height: auto; border-radius: 6px; }
+
+            @media print {
+              * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+              }
+              @page {
+                size: A4 portrait;
+                margin: 25mm 12mm 10mm 12mm;
+              }
+              .tp-sidebar, .tp-toolbar, .tp-header { display: none !important; }
+              .tp-body { display: block !important; }
+              .tp-preview-col { max-height: none !important; overflow: visible !important; padding: 0 !important; }
+              .tp-preview-wrap {
+                box-shadow: none !important;
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                background: #fff !important;
+              }
+              .tp-app { background: #fff !important; }
+              table.tp-doc-table {
+                margin-bottom: 8px !important;
+              }
+              table.tp-doc-table th, th {
+                background-color: #eef1f6 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+              }
+              table.tp-doc-table th, table.tp-doc-table td {
+                padding: 2px 4px !important;
+                font-size: 11px !important;
+                line-height: 1.2 !important;
+                height: 22px !important;
+                box-sizing: border-box !important;
+              }
+              .tp-confirm {
+                margin-top: 15px !important;
+                font-size: 11.5px !important;
+                line-height: 1.5 !important;
+              }
+              .tp-seal-box {
+                margin-top: 4px !important;
+              }
+              .tp-seal {
+                width: 60px !important;
+                height: 60px !important;
+                font-size: 8px !important;
+              }
+              .tp-disclaimer {
+                display: none !important;
+              }
+            }
+          `}</style>
+
+          <header className="tp-header">
+            <h1>강원특별자치도교육청 전보희망원(관외) 작성 도우미 (유치원교사용)</h1>
+            <p>좌측에 정보를 입력하면 우측 미리보기에 실시간으로 반영됩니다 · 유치원교사 전보희망원 서식 지원</p>
+          </header>
+
+          <div className="tp-body">
+            {/* ============================= 사이드바 ============================= */}
+            <aside className="tp-sidebar">
+              <Section title="① 기본정보" required>
+                <div className="tp-row2">
+                  <Field label="학년도">
+                    <input
+                      type="number"
+                      value={state.schoolYear}
+                      onChange={(e) => setState((s) => ({ ...s, schoolYear: e.target.value }))}
+                    />
+                  </Field>
+                  <Field label="교사 구분">
+                    <select value={state.teacherType} onChange={(e) => setState((s) => ({ ...s, teacherType: e.target.value }))}>
+                      <option value="유치원교사">유치원교사</option>
+                      <option value="수석교사">수석교사</option>
+                    </select>
+                  </Field>
+                </div>
+                <Field label="현재 유치원명">
+                  <input
+                    type="text"
+                    value={state.applicant.schoolName}
+                    onChange={(e) => setApplicant({ schoolName: e.target.value })}
+                    placeholder="예) 강원유"
+                  />
+                </Field>
+                <div className="tp-row2">
+                  <Field label="성명">
+                    <input type="text" value={state.applicant.name} onChange={(e) => setApplicant({ name: e.target.value })} />
+                  </Field>
+                  <Field label="성별">
+                    <select value={state.applicant.gender} onChange={(e) => setApplicant({ gender: e.target.value })}>
+                      <option>여</option>
+                      <option>남</option>
+                    </select>
+                  </Field>
+                </div>
+                <div className="tp-row2">
+                  <Field label="생년월일" hint="예) 741201 (YYMMDD)">
+                    <input
+                      type="text"
+                      maxLength={6}
+                      value={state.applicant.birthDate}
+                      onChange={(e) => setApplicant({ birthDate: e.target.value.replace(/\D/g, "") })}
+                    />
+                  </Field>
+                  <Field label="호봉" hint="해당 학년도 1. 1.자 기준">
+                    <input
+                      type="number"
+                      value={state.applicant.salaryStep}
+                      onChange={(e) => setApplicant({ salaryStep: e.target.value })}
+                    />
+                  </Field>
+                </div>
+                <div className="tp-row2">
+                  <Field label="교육총경력" hint="나이스 - 경력에서 (  )경력 기재(해당 학년도 2월말 기준)">
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={state.applicant.totalCareerYears}
+                      onChange={(e) => setApplicant({ totalCareerYears: e.target.value })}
+                    />
+                  </Field>
+                  <Field label="현시군 근속연수" hint="예시: 8년 6월 8.06으로 기재">
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={state.applicant.currentCountyYears}
+                      onChange={(e) => setApplicant({ currentCountyYears: e.target.value })}
+                    />
+                  </Field>
+                </div>
+                <div className="tp-row2">
+                  <Field label="현재교 근속연수" hint="예시: 4년 근무 4.00으로 기재">
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={state.applicant.currentSchoolYears}
+                      onChange={(e) => setApplicant({ currentSchoolYears: e.target.value })}
+                    />
+                  </Field>
+                  <div />
+                </div>
+                <span className="tp-hint" style={{ marginTop: "10px", display: "block", lineHeight: "1.4" }}>
+                  * 현시군·현재교 근속 연수: 현시군·현재교 발령 이후 근무한 기간으로 파견, 휴직, 정직, 직위해제 등의 근무하지 않은 기간을 제외한 실제 근무한 기간을 의미함.(근무기간-파견·휴직 기간=근속연수)
+                </span>
+              </Section>
+
+              <Section title="② 희망지" required>
+                <div className="tp-toggle">
+                  <span>지구별 근무연한 만기자입니까?</span>
+                  <button
+                    type="button"
+                    className={"tp-switch" + (state.districtExpired ? " on" : "")}
+                    onClick={() => setState((s) => ({ ...s, districtExpired: !s.districtExpired }))}
+                  />
+                </div>
+                <span className="tp-hint">
+                  {state.districtExpired
+                    ? "지구만기자: 4희망까지 기재할 수 있습니다."
+                    : "지구만기자가 아니면 1희망만 기재합니다 (작성방법 1호)."}
+                </span>
+
+                <div className="tp-row2">
+                  <Field label="1희망 시군명">
+                    <input type="text" value={state.prefs.p1.county} onChange={(e) => setPref("p1", { county: e.target.value })} />
+                  </Field>
+                  <div />
+                </div>
+                <div className="tp-row2">
+                  <Field label="1희망 학교명 ①">
+                    <input type="text" value={state.prefs.p1.school1} onChange={(e) => setPref("p1", { school1: e.target.value })} />
+                  </Field>
+                  <Field label="1희망 학교명 ②">
+                    <input type="text" value={state.prefs.p1.school2} onChange={(e) => setPref("p1", { school2: e.target.value })} />
+                  </Field>
+                </div>
+
+                {["p2", "p3", "p4"].map((k, i) => (
+                  <Field key={k} label={`${i + 2}희망 시군명`}>
+                    <input
+                      type="text"
+                      disabled={!state.districtExpired}
+                      value={state.prefs[k].county}
+                      onChange={(e) => setPref(k, { county: e.target.value })}
+                    />
+                  </Field>
+                ))}
+              </Section>
+
+              <Section title="③ 특이사항 체크">
+                <Field label="생활근거지(시군명)">
+                  <input type="text" value={state.flags.livingBase} onChange={(e) => setFlags({ livingBase: e.target.value })} />
+                </Field>
+                <div className="tp-toggle-grid">
+                  {[
+                    ["nationalSchoolWish", "국립학교희망"],
+                    ["invitedTeacherApply", "초빙교사지원"],
+                    ["otherProvinceApply", "타시도내신"],
+                    ["englishTraining", "영어장기연수"],
+                  ].map(([key, label]) => (
+                    <div className="tp-toggle" key={key}>
+                      <span>{label}</span>
+                      <button
+                        type="button"
+                        className={"tp-switch" + (state.flags[key] ? " on" : "")}
+                        onClick={() => setFlags({ [key]: !state.flags[key] })}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div className="tp-toggle">
+                  <span>특례조항 해당</span>
+                  <button
+                    type="button"
+                    className={"tp-switch" + (state.flags.specialProvision ? " on" : "")}
+                    onClick={() => setFlags({ specialProvision: !state.flags.specialProvision })}
+                  />
+                </div>
+                {state.flags.specialProvision && (
+                  <input
+                    type="text"
+                    placeholder="예) 인사관리규칙 제12조 제9호"
+                    value={state.flags.specialDetail}
+                    onChange={(e) => setFlags({ specialDetail: e.target.value })}
+                  />
+                )}
+                <div className="tp-toggle">
+                  <span>유예조항 해당</span>
+                  <button
+                    type="button"
+                    className={"tp-switch" + (state.flags.deferralProvision ? " on" : "")}
+                    onClick={() => setFlags({ deferralProvision: !state.flags.deferralProvision })}
+                  />
+                </div>
+                {state.flags.deferralProvision && (
+                  <input
+                    type="text"
+                    placeholder="예) 인사관리규칙 제11조 제7호"
+                    value={state.flags.deferralDetail}
+                    onChange={(e) => setFlags({ deferralDetail: e.target.value })}
+                  />
+                )}
+              </Section>
+
+              <Section title="④ 전보사유">
+                <Field label="전보사유 코드">
+                  <select value={state.transferReason} onChange={(e) => setState((s) => ({ ...s, transferReason: e.target.value }))}>
+                    {REASON_PRESETS.map((r) => (
+                      <option key={r}>{r}</option>
+                    ))}
+                  </select>
+                </Field>
+                {state.transferReason === "직접 입력" && (
+                  <input
+                    type="text"
+                    placeholder="전보사유를 직접 입력하세요"
+                    value={state.transferReasonCustom}
+                    onChange={(e) => setState((s) => ({ ...s, transferReasonCustom: e.target.value }))}
+                  />
+                )}
+                <span className="tp-hint" style={{ marginTop: "10px", display: "block", lineHeight: "1.4" }}>
+                  도지침 4-1)-① 지구 만기자<br />
+                  도지침 4-1)-③ 전보 희망자
+                </span>
+              </Section>
+
+              <Section title="⑤ 교육기관 근무 가족현황" defaultOpen={false}>
+                {state.family.map((f) => (
+                  <div className="tp-card" key={f.id}>
+                    <button className="tp-card-remove" onClick={() => removeFamily(f.id)}>
+                      <Trash2 size={14} />
+                    </button>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                      <Field label="소속">
+                        <input type="text" value={f.affiliation} onChange={(e) => updateFamily(f.id, { affiliation: e.target.value })} placeholder="예) 강원초" />
+                      </Field>
+                      <div className="tp-row2">
+                        <Field label="직위">
+                          <input type="text" value={f.position} onChange={(e) => updateFamily(f.id, { position: e.target.value })} placeholder="예) 교사" />
+                        </Field>
+                        <Field label="성명">
+                          <input type="text" value={f.name} onChange={(e) => updateFamily(f.id, { name: e.target.value })} placeholder="예) 홍길동" />
+                        </Field>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                <RowActions onAdd={addFamily} addLabel="가족현황 추가" />
+              </Section>
+
+              <Section title="⑥ 경력평정" required>
+                <span className="tp-hint" style={{ marginBottom: "8px", display: "block", lineHeight: "1.4" }}>
+                  * 동일 직위 현 소속 시·군에서 근무한 최근 5년간의 경력 기재<br />
+                  &nbsp;&nbsp;(파견, 휴직이 있는 경우 해당 기간 제외한 5년간의 경력)
+                </span>
+                {careerRows.map((c) => (
+                  <div className="tp-card" key={c.id}>
+                    <button className="tp-card-remove" onClick={() => removeCareer(c.id)}>
+                      <Trash2 size={14} />
+                    </button>
+                    <Field label="근무유치원명">
+                      <input type="text" value={c.schoolName} onChange={(e) => updateCareer(c.id, { schoolName: e.target.value })} />
+                    </Field>
+                    <div className="tp-row2">
+                      <Field label="근무 시작일">
+                        <input type="date" max="9999-12-31" value={c.start} onChange={(e) => updateCareer(c.id, { start: e.target.value })} />
+                      </Field>
+                      <Field label="근무 종료일">
+                        <input type="date" max="9999-12-31" value={c.end} onChange={(e) => updateCareer(c.id, { end: e.target.value })} />
+                      </Field>
+                    </div>
+                    <div className="tp-row2">
+                      <Field label="지구">
+                        <select
+                          value={c.district}
+                          onChange={(e) =>
+                            updateCareer(c.id, { district: e.target.value, zone: DISTRICT_ZONES[e.target.value][0].code })
+                          }
+                        >
+                          {Object.keys(DISTRICT_ZONES).map((d) => (
+                            <option key={d}>{d}</option>
+                          ))}
+                        </select>
+                      </Field>
+                      <Field label="급지">
+                        <select value={c.zone} onChange={(e) => updateCareer(c.id, { zone: e.target.value })}>
+                          {DISTRICT_ZONES[c.district].map((z) => (
+                            <option key={z.code} value={z.code}>
+                              {z.label} · 연 {z.annual}점 · 월 {z.monthly}점
+                            </option>
+                          ))}
+                        </select>
+                      </Field>
+                    </div>
+                    <span className="tp-score-pill">
+                      근무 {c.years}년 {c.months}월 · 서식표기 {c.district.replace("지구", "")}({c.zone}) · 평정점 {fmt(c.score)}점
+                    </span>
+                  </div>
+                ))}
+                 <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "8px", flexWrap: "wrap" }}>
+                   <RowActions onAdd={addCareer} addLabel="경력 추가" />
+                   <button type="button" className="tp-btn" style={{ height: "36px", padding: "0 12px", border: "1px solid var(--line)" }} onClick={() => setActiveImage("교원 전보전입 순위 책정 평정 기준표.jpg")}>
+                     기준표 보기
+                   </button>
+                   <button type="button" className="tp-btn" style={{ height: "36px", padding: "0 12px", border: "1px solid var(--line)" }} onClick={() => setActiveImage("별표2 특급지.jpg")}>
+                     특급지 보기
+                   </button>
+                 </div>
+                 <span className="tp-hint">경력평정 소계(자동계산): {fmt(careerSubtotal)}점</span>
+               </Section>
+
+              <Section title="⑦ 파견·휴직" defaultOpen={false}>
+                <span className="tp-hint" style={{ marginBottom: "8px", display: "block" }}>
+                  * 정직, 직위해제, 파견, 휴직기간 입력 시 경력평정의 근무년수에 자동반영됩니다.
+                </span>
+                {dispatchRows.map((d) => (
+                  <div className="tp-card" key={d.id}>
+                    <button className="tp-card-remove" onClick={() => removeDispatch(d.id)}>
+                      <Trash2 size={14} />
+                    </button>
+                    <div className="tp-row2">
+                      <Field label="구분">
+                        <select value={d.type} onChange={(e) => updateDispatch(d.id, { type: e.target.value })}>
+                          <option>파견(학습연구년)</option>
+                          <option>파견(기타)</option>
+                          <option>휴직(육아)</option>
+                          <option>휴직(질병)</option>
+                          <option>휴직(기타)</option>
+                        </select>
+                      </Field>
+                      <Field label="기관명">
+                        <input type="text" value={d.org} onChange={(e) => updateDispatch(d.id, { org: e.target.value })} />
+                      </Field>
+                    </div>
+                    <div className="tp-row2">
+                      <Field label="시작일">
+                        <input type="date" max="9999-12-31" value={d.start} onChange={(e) => updateDispatch(d.id, { start: e.target.value })} />
+                      </Field>
+                      <Field label="종료일">
+                        <input type="date" max="9999-12-31" value={d.end} onChange={(e) => updateDispatch(d.id, { end: e.target.value })} />
+                      </Field>
+                    </div>
+                    <span className="tp-score-pill">
+                      {d.years}년 {d.months}월
+                    </span>
+                  </div>
+                ))}
+                <RowActions onAdd={addDispatch} addLabel="파견·휴직 추가" />
+              </Section>
+
+              <Section title="⑧ 가산점(감점) 평정" required>
+                <span className="tp-hint" style={{ marginBottom: "12px", display: "block", lineHeight: "1.4" }}>
+                  1. 가산점 입력은 본인에게 해당사항이 있는 평정 항목에 맞춰 차례대로 입력하시기 바랍니다.<br />
+                  2. 표창은 당해 직위에서 그 외의 항목은 현 소속 시·군에서 최근 5년 이내 당해 직위에서 평정할 수 있는 가산점 중 유리한 것 1개만 적용.<br />
+                  3. 장기 근속 평정점은 3,4지구 근무자만 해당(속초,동해 제외)
+                </span>
+                <div className="tp-preset-row">
+                  {BONUS_PRESETS.slice(0, 8).map((p) => (
+                    <button key={p.label} className="tp-preset-chip" onClick={() => addBonus(p)}>
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
+                 {computedBonuses.map((b) => {
+                  const isAward = AWARD_TYPES.some(a => b.type === a.label) || b.type === "1.표창" || b.type === "표창";
+                  const isResearch = RESEARCH_TYPES.some(r => b.type === r.label) || b.type === "2.연구실적" || b.type === "연구실적";
+                  const isOtherDropdown = OTHER_TYPES.some(o => b.type === o.label);
+                  const isDemerit = DEMERIT_TYPES.some(d => b.type === d.label) || b.type === "감점";
+                  let categoryLabel = "가산점";
+                  if (isAward) categoryLabel = "1.표창";
+                  else if (isResearch) categoryLabel = "2.연구실적";
+                  else if (b.type && b.type.includes("연구유치원")) categoryLabel = "3.연구유치원";
+                  else if (b.type && b.type.includes("교육실습협력유치원")) categoryLabel = "4.교육실습협력유치원";
+                  else if (b.type && b.type.includes("우대")) categoryLabel = "5.우대";
+                  else if (b.type && b.type.includes("장기근속")) categoryLabel = "7.장기근속";
+                  else if (b.type && b.type.includes("호봉")) categoryLabel = "8.기타(호봉)";
+                  else if (isDemerit) categoryLabel = "감점";
+
+                  return (
+                    <div className="tp-card" key={b.id}>
+                      <button className="tp-card-remove" onClick={() => removeBonus(b.id)}>
+                        <Trash2 size={14} />
+                      </button>
+                      <div className="tp-row2" style={{ marginBottom: "6px" }}>
+                        <Field label={`${categoryLabel} 입력 방식`}>
+                          <select value={b.inputMode || "single"} disabled={isOtherDropdown} onChange={(e) => updateBonus(b.id, { inputMode: e.target.value })}>
+                            <option value="single">단일 일자</option>
+                            <option value="period">근무 기간</option>
+                          </select>
+                        </Field>
+                        <div />
+                      </div>
+                      {b.inputMode === "period" ? (
+                        <>
+                          <div className="tp-row2">
+                            <Field label="근무 시작일">
+                              <input type="date" max="9999-12-31" value={b.start || ""} onChange={(e) => updateBonus(b.id, { start: e.target.value })} />
+                            </Field>
+                            <Field label="근무 종료일">
+                              <input type="date" max="9999-12-31" value={b.end || ""} onChange={(e) => updateBonus(b.id, { end: e.target.value })} />
+                            </Field>
+                          </div>
+                          <div className="tp-row2">
+                            <Field label="연 평정점">
+                              <input
+                                type="number"
+                                step="0.001"
+                                value={b.annualScore || ""}
+                                onChange={(e) => updateBonus(b.id, { annualScore: e.target.value })}
+                                placeholder="예) 0.5"
+                              />
+                            </Field>
+                            <Field label="자동 계산 평정점">
+                              <input type="text" disabled value={fmt(b.parsedScore)} />
+                            </Field>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="tp-row2">
+                          <Field label="연월일">
+                            <input type="date" max="9999-12-31" value={b.date} onChange={(e) => updateBonus(b.id, { date: e.target.value })} />
+                          </Field>
+                          <Field label="평정점">
+                            <input
+                              type="text"
+                              value={b.score}
+                              onChange={(e) => updateBonus(b.id, { score: e.target.value })}
+                              placeholder="예) 0.5 또는 -1.0"
+                            />
+                          </Field>
+                        </div>
+                      )}
+                      {isAward ? (
+                        <Field label="종별 (표창종류)">
+                          <select
+                            value={b.type === "1.표창" || b.type === "표창" ? "훈·포장" : b.type}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              const found = AWARD_TYPES.find(a => a.label === val);
+                              const isModel = val === "국무총리표창" || val === "교육감표창";
+                              updateBonus(b.id, {
+                                type: val,
+                                score: found ? found.score : 0,
+                                annualScore: found ? found.score : 0,
+                                isModelCivilServant: isModel ? b.isModelCivilServant : false
+                              });
+                            }}
+                          >
+                            <option value="1.표창" disabled hidden>선택해 주세요</option>
+                            <option value="표창" disabled hidden>선택해 주세요</option>
+                            {AWARD_TYPES.map(a => (
+                              <option key={a.label} value={a.label}>{a.label}</option>
+                            ))}
+                          </select>
+                        </Field>
+                      ) : isResearch ? (
+                        <Field label="종별 (연구실적)">
+                          <select
+                            value={b.type === "연구실적" ? "연구점수 전국1등급" : b.type}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              const found = RESEARCH_TYPES.find(r => r.label === val);
+                              updateBonus(b.id, { type: val, score: found ? found.score : 0, annualScore: found ? found.score : 0 });
+                            }}
+                          >
+                            <option value="연구실적" disabled hidden>선택해 주세요</option>
+                            {RESEARCH_TYPES.map(r => (
+                              <option key={r.label} value={r.label}>{r.label}</option>
+                            ))}
+                          </select>
+                        </Field>
+                      ) : isOtherDropdown ? (
+                        <Field label="종별 (기타 가산점)">
+                          <select
+                            value={b.type === "8.기타" ? "복식학급담임교사" : b.type}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              const found = OTHER_TYPES.find(o => o.label === val);
+                              updateBonus(b.id, {
+                                type: val,
+                                score: 0,
+                                annualScore: found ? found.score : 0
+                              });
+                            }}
+                          >
+                            <option value="8.기타" disabled hidden>선택해 주세요</option>
+                            {OTHER_TYPES.map(o => (
+                              <option key={o.label} value={o.label}>{o.label} (년{o.score}, {o.cap}점 한)</option>
+                            ))}
+                          </select>
+                        </Field>
+                      ) : isDemerit ? (
+                        <Field label="종별 (감점종류)">
+                          <select
+                            value={b.type === "감점" ? "강등" : b.type}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              const found = DEMERIT_TYPES.find(d => d.label === val);
+                              updateBonus(b.id, {
+                                type: val,
+                                score: found ? String(found.score) : "0",
+                                annualScore: found ? found.score : 0
+                              });
+                            }}
+                          >
+                            <option value="감점" disabled hidden>선택해 주세요</option>
+                            {DEMERIT_TYPES.map(d => (
+                              <option key={d.label} value={d.label}>{d.label} ({d.score}점)</option>
+                            ))}
+                          </select>
+                          <span className="tp-hint" style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "4px", display: "block" }}>
+                            최근 2년 이내(행정경고는 최근 1년 이내)
+                          </span>
+                        </Field>
+                      ) : (
+                        <Field label="종별">
+                          <input type="text" value={b.type} onChange={(e) => updateBonus(b.id, { type: e.target.value })} />
+                        </Field>
+                      )}
+                      {(b.type.includes("국무총리표창") || b.type.includes("교육감표창")) && (
+                        <div className="tp-toggle" style={{ marginTop: "4px" }}>
+                          <span>모범공무원 여부</span>
+                          <button
+                            type="button"
+                            className={"tp-switch" + (b.isModelCivilServant ? " on" : "")}
+                            onClick={() => updateBonus(b.id, { isModelCivilServant: !b.isModelCivilServant })}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+                <div className="tp-preset-row" style={{ marginTop: "12px", marginBottom: "8px" }}>
+                  {BONUS_PRESETS.slice(0, 8).map((p) => (
+                    <button key={p.label} className="tp-preset-chip" onClick={() => addBonus(p)}>
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
+                <RowActions onAdd={() => addBonus(null)} addLabel="가산점(감점) 항목 추가" />
+                <span className="tp-hint">
+                  가산점(감점) 소계(자동계산): {fmt(bonusSubtotal)}점
+                </span>
+              </Section>
+
+              <Section title="⑨ 확인 · 서명" defaultOpen={false}>
+                <Field label="작성일자">
+                  <input type="date" max="9999-12-31" value={state.confirmation.date} onChange={(e) => setConfirmation({ date: e.target.value })} />
+                </Field>
+                <Field label="학교장 성명">
+                  <input type="text" value={state.confirmation.principal} onChange={(e) => setConfirmation({ principal: e.target.value })} />
+                </Field>
+              </Section>
+            </aside>
+
+            {/* ============================= 미리보기 ============================= */}
+            <div className="tp-preview-col">
+              <div className="tp-preview-wrap">
+
+
+                <div style={{ display: "flex", alignItems: "stretch", marginTop: "4px", marginBottom: "8px", gap: "0" }}>
+                  {/* 왼쪽: 문서 제목 (표 스타일 적용 안 함) */}
+                  <div style={{
+                    width: "45%",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                    lineHeight: "1.4",
+                    padding: "6px 8px",
+                    fontFamily: "Nanum Myeongjo, Batang, serif"
+                  }}>
+                    <div>{state.schoolYear}학년도</div>
+                    <div>
+                      (<span className="tp-val">{state.teacherType}</span>) 전보희망원
+                    </div>
+                  </div>
+
+                  {/* 오른쪽: 희망지 테이블 */}
+                  <div style={{ width: "55%" }}>
+                    <table className="tp-doc-table" style={{ width: "100%", height: "100%", margin: "0", border: "2px solid #14213b" }}>
+                      <tbody>
+                        <tr>
+                          <th colSpan={3} style={{ height: "22px" }}>1희망</th>
+                          <th rowSpan={2} style={{ width: "16%" }}>2희망<br />시군명</th>
+                          <th rowSpan={2} style={{ width: "16%" }}>3희망<br />시군명</th>
+                          <th rowSpan={2} style={{ width: "18%" }}>4희망<br />시군명</th>
+                        </tr>
+                        <tr>
+                          <th style={{ width: "16%", height: "22px" }}>시군명</th>
+                          <th style={{ width: "17%" }}>유치원명①</th>
+                          <th style={{ width: "17%" }}>유치원명②</th>
+                        </tr>
+                        <tr>
+                          <td className="tp-val">{state.prefs.p1.county || ""}</td>
+                          <td className="tp-val">{state.prefs.p1.school1 || ""}</td>
+                          <td className="tp-val">{state.prefs.p1.school2 || ""}</td>
+                          <td className="tp-val">{state.districtExpired ? state.prefs.p2.county || "" : ""}</td>
+                          <td className="tp-val">{state.districtExpired ? state.prefs.p3.county || "" : ""}</td>
+                          <td className="tp-val">{state.districtExpired ? state.prefs.p4.county || "" : ""}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* 인적사항 테이블 */}
+                <table className="tp-doc-table" style={{ border: "2px solid #14213b" }}>
+                  <thead>
+                    <tr>
+                      <th style={{ width: "14%" }}>유치원명</th>
+                      <th style={{ width: "12%" }}>성명</th>
+                      <th style={{ width: "8%" }}>성별</th>
+                      <th style={{ width: "14%" }}>생년월일</th>
+                      <th style={{ width: "10%" }}>호봉</th>
+                      <th style={{ width: "14%" }}>교육<br />총경력</th>
+                      <th style={{ width: "14%" }}>현시군<br />근속연수</th>
+                      <th style={{ width: "14%" }}>현재교<br />근속연수</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="tp-val">{state.applicant.schoolName || ""}</td>
+                      <td className="tp-val">{state.applicant.name || ""}</td>
+                      <td className="tp-val">{state.applicant.gender}</td>
+                      <td className="tp-val">{state.applicant.birthDate || ""}</td>
+                      <td className="tp-val">{state.applicant.salaryStep || ""}</td>
+                      <td className="tp-val">{state.applicant.totalCareerYears || ""}</td>
+                      <td className="tp-val">{state.applicant.currentCountyYears || ""}</td>
+                      <td className="tp-val">{state.applicant.currentSchoolYears || ""}</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                {/* 생활근거지 및 특이사항 테이블 */}
+                <table className="tp-doc-table" style={{ border: "2px solid #14213b" }}>
+                  <thead>
+                    <tr>
+                      <th style={{ width: "15%" }}>생활근거지</th>
+                      <th style={{ width: "14%" }}>국립학교희망</th>
+                      <th style={{ width: "14%" }}>초빙교사지원</th>
+                      <th style={{ width: "14%" }}>타시도내신</th>
+                      <th style={{ width: "15%" }}>영어장기연수</th>
+                      <th style={{ width: "14%" }}>특례조항</th>
+                      <th style={{ width: "14%" }}>유예조항</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="tp-val">{state.flags.livingBase || ""}</td>
+                      <td className="tp-val">{state.flags.nationalSchoolWish ? "○" : "×"}</td>
+                      <td className="tp-val">{state.flags.invitedTeacherApply ? "○" : "×"}</td>
+                      <td className="tp-val">{state.flags.otherProvinceApply ? "○" : "×"}</td>
+                      <td className="tp-val">{state.flags.englishTraining ? "○" : "×"}</td>
+                      <td className="tp-val">{state.flags.specialProvision ? "○" : "×"}</td>
+                      <td className="tp-val">{state.flags.deferralProvision ? "○" : "×"}</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                {/* 전보사유 및 가족현황 */}
+                <table className="tp-doc-table" style={{ border: "2px solid #14213b" }}>
+                  <tbody>
+                    <tr>
+                      <th rowSpan={Math.max(2, state.family.length + 1)} style={{ width: "10%" }}>전보<br />사유</th>
+                      <td rowSpan={Math.max(2, state.family.length + 1)} className="tp-val tp-left" style={{ width: "38%", paddingLeft: "12px" }}>
+                        {state.transferReason === "직접 입력" ? state.transferReasonCustom || "" : state.transferReason}
+                      </td>
+                      <th rowSpan={Math.max(2, state.family.length + 1)} style={{ width: "12%" }}>교육기관<br />근무<br />가족현황</th>
+                      <th style={{ width: "16%", height: "22px" }}>소속</th>
+                      <th style={{ width: "12%" }}>직위</th>
+                      <th style={{ width: "12%" }}>성명</th>
+                    </tr>
+                    {state.family.length === 0 ? (
+                      <tr>
+                        <td className="tp-val"></td>
+                        <td className="tp-val"></td>
+                        <td className="tp-val"></td>
+                      </tr>
+                    ) : (
+                      state.family.map((f, i) => (
+                        <tr key={f.id}>
+                          <td className="tp-val">{f.affiliation || ""}</td>
+                          <td className="tp-val">{f.position || ""}</td>
+                          <td className="tp-val">{f.name || ""}</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+
+                {/* 경력평정 및 파견휴직 통합 테이블 */}
+                <table className="tp-doc-table" style={{ marginTop: "4px", border: "2px solid #14213b" }}>
+                  <thead>
+                    <tr>
+                      <th style={{ width: "10%" }}>구분</th>
+                      <th style={{ width: "17%" }}>근무유치원명</th>
+                      <th style={{ width: "28%" }}>근무기간</th>
+                      <th style={{ width: "9%" }}>근무년수</th>
+                      <th style={{ width: "18%" }}>지구(급지)</th>
+                      <th style={{ width: "10%" }}>평정점</th>
+                      <th style={{ width: "8%" }}>소계</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* 경력평정 데이터 행 */}
+                    {Array.from({ length: Math.max(4, careerRows.length) }).map((_, i) => {
+                      const c = careerRows[i];
+                      return (
+                        <tr key={c?.id || `empty-career-${i}`}>
+                          {i === 0 && (
+                            <td rowSpan={Math.max(4, careerRows.length)} style={{ fontWeight: "bold" }}>
+                              경력<br />평정
+                            </td>
+                          )}
+                          <td className="tp-val">{c?.schoolName || ""}</td>
+                          <td className="tp-val">{c ? `${formatDateStr(c.start)}~${formatDateStr(c.end)}` : ""}</td>
+                          <td className="tp-val">{c ? `${c.years}.${String(c.months).padStart(2, "0")}` : ""}</td>
+                          <td className="tp-val">{c ? `${c.district.replace("지구", "")}(${c.zone === "특" ? "특급지" : c.zone})` : ""}</td>
+                          <td className="tp-val">{c ? fmt(c.score) : ""}</td>
+                          {i === 0 && (
+                            <td rowSpan={Math.max(4, careerRows.length) + Math.max(2, dispatchRows.length) + 1} className="tp-val" style={{ fontSize: "12px", fontWeight: "bold" }}>
+                              {fmt(careerSubtotal)}
+                            </td>
+                          )}
+                        </tr>
+                      );
+                    })}
+
+                    {/* 파견휴직 구분선/헤더 행 */}
+                    <tr>
+                      <th colSpan={2}>구분</th>
+                      <th>기관명</th>
+                      <th>기간</th>
+                      <th>연</th>
+                      <th>월</th>
+                      {/* 소계는 위에서 span되어 생략 */}
+                    </tr>
+
+                    {/* 파견휴직 데이터 행 */}
+                    {Array.from({ length: Math.max(2, dispatchRows.length) }).map((_, i) => {
+                      const d = dispatchRows[i];
+                      return (
+                        <tr key={d?.id || `empty-dispatch-${i}`}>
+                          {i === 0 && (
+                            <td rowSpan={Math.max(2, dispatchRows.length)} style={{ fontWeight: "bold" }}>
+                              파견<br />휴직
+                            </td>
+                          )}
+                          <td className="tp-val">{d?.type || ""}</td>
+                          <td className="tp-val">{d?.org || ""}</td>
+                          <td className="tp-val">{d ? `${formatDateStr(d.start)}~${formatDateStr(d.end)}` : ""}</td>
+                          <td className="tp-val">{d ? `${d.years}` : ""}</td>
+                          <td className="tp-val">{d ? `${d.months || ""}` : ""}</td>
+                          {/* 소계는 위에서 span되어 생략 */}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+
+                {/* 가산점 평정 테이블 */}
+                <table className="tp-doc-table" style={{ marginTop: "4px", border: "2px solid #14213b" }}>
+                  <thead>
+                    <tr>
+                      <th style={{ width: "10%" }}>구분</th>
+                      <th style={{ width: "14%" }}>연월일</th>
+                      <th style={{ width: "18%" }}>종별</th>
+                      <th style={{ width: "9%" }}>평정점</th>
+                      <th style={{ width: "14%" }}>연월일</th>
+                      <th style={{ width: "18%" }}>종별</th>
+                      <th style={{ width: "9%" }}>평정점</th>
+                      <th style={{ width: "8%" }}>소계</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Array.from({ length: Math.max(3, bonusRowCount) }).map((_, r) => {
+                      const left = bonusItems[r];
+                      const right = bonusItems[r + bonusRowCount];
+                      return (
+                        <tr key={`bonus-row-${r}`}>
+                          {r === 0 && (
+                            <td rowSpan={Math.max(3, bonusRowCount)} style={{ fontWeight: "bold" }}>
+                              가산점<br />(감점)<br />평정
+                            </td>
+                          )}
+                          <td className="tp-val">{left?.date || ""}</td>
+                          <td className="tp-val" style={{ textAlign: "left", paddingLeft: "6px" }}>{left?.type || ""}</td>
+                          <td className="tp-val">{left ? fmt(left.score) : ""}</td>
+                          <td className="tp-val">{right?.date || ""}</td>
+                          <td className="tp-val" style={{ textAlign: "left", paddingLeft: "6px" }}>{right?.type || ""}</td>
+                          <td className="tp-val">{right ? fmt(right.score) : ""}</td>
+                          {r === 0 && (
+                            <td rowSpan={Math.max(3, bonusRowCount)} className="tp-val" style={{ fontSize: "12px", fontWeight: "bold" }}>
+                              {fmt(bonusSubtotal)}
+                            </td>
+                          )}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+
+                {/* 총점 테이블 */}
+                <table className="tp-doc-table" style={{ marginTop: "4px", border: "2px solid #14213b" }}>
+                  <tbody>
+                    <tr style={{ background: "#eef1f6", fontWeight: "bold" }}>
+                      <td style={{ width: "95%", textAlign: "center", fontSize: "12px", height: "24px" }}>총점</td>
+                      <td className="tp-val" style={{ width: "5%", textAlign: "center", fontSize: "13px", fontWeight: "bold" }}>
+                        {fmt(totalScore)}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div style={{ textAlign: "center", marginTop: "12px", fontSize: "15.5px", lineHeight: "1.4" }}>
+                  위 기재 내용과 평정점이 틀림없음을 확인하였으며, 위와 같이 전보를 희망하였기에 내신합니다.
+                </div>
+
+                <div style={{ textAlign: "center", margin: "10px 0 8px", fontSize: "17px", fontWeight: "bold", letterSpacing: "2px" }}>
+                  {state.confirmation.date ? (
+                    (() => {
+                      const d = new Date(state.confirmation.date);
+                      return isNaN(d)
+                        ? `${state.schoolYear || 2027} 년     월     일`
+                        : `${d.getFullYear()} 년   ${String(d.getMonth() + 1).padStart(2, "0")} 월   ${String(d.getDate()).padStart(2, "0")} 일`;
+                    })()
+                  ) : (
+                    `${state.schoolYear || 2027} 년     월     일`
+                  )}
+                </div>
+
+                {/* 원감/장학사 확인 위원 서명 란 */}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: "10px", padding: "0 10px" }}>
+                  <table style={{ width: "192px", borderCollapse: "collapse", margin: "0", border: "2px solid #14213b" }}>
+                    <tbody>
+                      <tr>
+                        <th rowSpan={2} style={{ width: "43px", border: "1px solid #8b93a6", fontSize: "14px", padding: "2px", backgroundColor: "#eef1f6" }}>확<br />인</th>
+                        <th style={{ width: "74px", border: "1px solid #8b93a6", fontSize: "14px", padding: "2px", height: "22px", backgroundColor: "#eef1f6" }}>원감</th>
+                        <th style={{ width: "74px", border: "1px solid #8b93a6", fontSize: "14px", padding: "2px", backgroundColor: "#eef1f6" }}>장학사</th>
+                      </tr>
+                      <tr>
+                        <td style={{ border: "1px solid #8b93a6", height: "60px" }}></td>
+                        <td style={{ border: "1px solid #8b93a6" }}></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div style={{ fontSize: "16px", marginRight: "60px", paddingBottom: "4px" }}>
+                    위원인 <span className="tp-val" style={{ display: "inline-block", width: "120px", textAlign: "center" }}>{state.applicant.name || ""}</span> (서명 또는 인)
+                  </div>
+                </div>
+
+                {/* 학교장 직인 란 */}
+                <div style={{ textAlign: "center", margin: "18px 0 10px", fontSize: "18px", fontWeight: "bold" }}>
+                  <span className="tp-val">{formatSchoolTitle(state.applicant.schoolName, state.teacherType)}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;성명
+                  <span className="tp-val" style={{ display: "inline-block", width: "120px", textAlign: "center" }}>{state.confirmation.principal || "○○○"}</span>직인<span style={{ marginLeft: "1.5cm" }}>(사인)</span>
+                </div>
+
+                {/* 교육감 귀하 */}
+                <div style={{ textAlign: "left", marginTop: "20px" }}>
+                  <div style={{ fontSize: "21px", fontWeight: "bold", letterSpacing: "1px" }}>
+                    강원특별자치도교육감 귀하
+                  </div>
+                </div>
+
+                <p className="tp-disclaimer">
+                  ※ 본 시스템은 전보희망원 작성을 지원하기 위한 참고용 도구입니다. 작성된 내용은 제출 전 관련 실제 제출 전 반드시 「강원특별자치도 교육공무원 인사관리 지침(유치원)」 부록 별표1·별표2 원문 및 기준에 따라 반드시 본인이 최종 검토·수정하시기 바랍니다.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* ============================= 하단 툴바 ============================= */}
+          <div className="tp-toolbar">
+            <div className="tp-total-badge">
+              <div className="tp-total-circle">{fmt(totalScore)}</div>
+              <div className="tp-total-text">
+                <b>총 평정점 {fmt(totalScore)}점</b>
+                경력 {fmt(careerSubtotal)} + 가산점 {fmt(bonusSubtotal)}
+              </div>
+              {missingRequired && <span className="tp-warn">필수 항목을 확인해 주세요</span>}
+            </div>
+            <div className="tp-toolbar-btns">
+              <button className="tp-btn" onClick={loadSampleData}>
+                <Upload size={14} /> 샘플 불러오기
+              </button>
+              <button className="tp-btn" onClick={resetAll}>
+                <RotateCcw size={14} /> 초기화
+              </button>
+              <button className="tp-btn" onClick={exportJSON}>
+                <Download size={14} /> 내보내기
+              </button>
+              <label className="tp-btn tp-file-btn">
+                <Upload size={14} /> 불러오기
+                <input type="file" accept="application/json" onChange={importJSON} />
+              </label>
+              <button className="tp-btn primary" onClick={doPrint}>
+                <Printer size={14} /> 인쇄 / PDF 저장
+              </button>
+            </div>
+          </div>
+
+          {/* 이미지 모달 팝업 */}
+          {activeImage && (
+            <div className="tp-modal-overlay" onClick={() => setActiveImage(null)}>
+              <div className="tp-modal-content" onClick={(e) => e.stopPropagation()}>
+                <button type="button" className="tp-modal-close" onClick={() => setActiveImage(null)}>×</button>
+                <img src={activeImage} className="tp-modal-img" alt={activeImage} />
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<TransferApplicationPrototype />);
+  </script>
+</body>
+</html>
