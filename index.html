@@ -104,7 +104,7 @@
         { code: "가,나", label: "특수지 가,나급지", annual: 13.5, monthly: 1.125 },
         { code: "특", label: "특급지(별표2)", annual: 14.0, monthly: 1.166 },
       ],
-      "2지구-속초(원감)": [
+      "2지구": [
         { code: "일반지(읍면)", label: "일반지 - 읍면", annual: 12.5, monthly: 1.041 },
         { code: "다,라", label: "특수지 다,라급지", annual: 13.0, monthly: 1.083 },
         { code: "가,나", label: "특수지 가,나급지", annual: 13.5, monthly: 1.125 },
@@ -1255,7 +1255,7 @@
                       onChange={(e) => setApplicant({ birthDate: e.target.value.replace(/\D/g, "") })}
                     />
                   </Field>
-                  <Field label="호봉" hint="해당 학년도 1. 1.자 기준">
+                  <Field label="호봉" hint={<span>해당 학년도 1. 1.자 기준<br />*근가1호봉=41호봉</span>}>
                     <input
                       type="number"
                       value={state.applicant.salaryStep}
