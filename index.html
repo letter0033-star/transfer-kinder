@@ -93,6 +93,14 @@
       </svg>
     );
 
+    const HelpCircle = ({ size = 16, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+      </svg>
+    );
+
     /* ------------------------------------------------------------------ */
     /* 규정 근거 데이터 (별표1 / 별표2) — 프로토타입용 best-effort 매핑          */
     /* ------------------------------------------------------------------ */
@@ -631,6 +639,7 @@
       const [state, setState] = useState(initialState);
 
       const [activeImage, setActiveImage] = useState(null);
+      const [showHelpModal, setShowHelpModal] = useState(true);
 
       const setApplicant = (patch) =>
         setState((s) => ({ ...s, applicant: { ...s.applicant, ...patch } }));
@@ -1191,6 +1200,92 @@
             .tp-modal-close:hover { color: var(--ink); }
             .tp-modal-img { max-width: 100%; height: auto; border-radius: 6px; }
 
+            /* --- 사용방법 및 주의사항 가이드 모달 CSS --- */
+            .tp-guide-modal {
+              background: #fff;
+              border-radius: 14px;
+              width: 680px;
+              max-width: 95vw;
+              max-height: 85vh;
+              display: flex;
+              flex-direction: column;
+              box-shadow: 0 16px 36px rgba(0,0,0,0.28);
+              position: relative;
+              overflow: hidden;
+            }
+            .tp-guide-header {
+              padding: 16px 20px;
+              background: #f7f9fd;
+              border-bottom: 1px solid var(--line);
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            }
+            .tp-guide-title {
+              font-size: 16px;
+              font-weight: 700;
+              color: var(--ink);
+              display: flex;
+              align-items: center;
+              gap: 8px;
+            }
+            .tp-guide-body {
+              padding: 20px 24px;
+              overflow-y: auto;
+              font-size: 13px;
+              line-height: 1.65;
+              color: #2d3748;
+            }
+            .tp-guide-section {
+              margin-bottom: 22px;
+            }
+            .tp-guide-section:last-child {
+              margin-bottom: 0;
+            }
+            .tp-guide-subhead {
+              font-size: 14.5px;
+              font-weight: 700;
+              color: var(--ink);
+              margin-bottom: 9px;
+              display: flex;
+              align-items: center;
+              gap: 6px;
+              border-bottom: 2px solid #e2e8f0;
+              padding-bottom: 5px;
+            }
+            .tp-guide-box {
+              background: #f8fafc;
+              border: 1px solid #e2e8f0;
+              border-radius: 8px;
+              padding: 12px 16px;
+              margin-bottom: 10px;
+            }
+            .tp-guide-box.warn {
+              background: #fffaf0;
+              border-color: #feebc8;
+            }
+            .tp-guide-box.info {
+              background: #f0f7ff;
+              border-color: #bae0ff;
+            }
+            .tp-guide-list {
+              padding-left: 20px;
+              margin: 4px 0;
+            }
+            .tp-guide-list li {
+              margin-bottom: 7px;
+            }
+            .tp-guide-list li:last-child {
+              margin-bottom: 0;
+            }
+            .tp-guide-footer {
+              padding: 12px 20px;
+              border-top: 1px solid var(--line);
+              background: #fbfcfd;
+              display: flex;
+              justify-content: flex-end;
+            }
+
             @media print {
               * {
                 -webkit-print-color-adjust: exact !important;
@@ -1245,9 +1340,29 @@
             }
           `}</style>
 
-          <header className="tp-header">
-            <h1>강원특별자치도교육청 전보희망원(관외) 작성 도우미 (유치원교사용)</h1>
-            <p>좌측에 정보를 입력하면 우측 미리보기에 실시간으로 반영됩니다 · 유치원교사 전보희망원 서식 지원</p>
+          <header className="tp-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
+            <div>
+              <h1>강원특별자치도교육청 전보희망원(관외) 작성 도우미 (유치원교사용)</h1>
+              <p>좌측에 정보를 입력하면 우측 미리보기에 실시간으로 반영됩니다 · 유치원교사 전보희망원 서식 지원</p>
+            </div>
+            <button
+              type="button"
+              className="tp-btn"
+              style={{
+                background: "#2b5ce7",
+                color: "#fff",
+                border: "none",
+                padding: "8px 14px",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontSize: "12.5px",
+                fontWeight: 600,
+                boxShadow: "0 2px 6px rgba(43,92,231,0.3)"
+              }}
+              onClick={() => setShowHelpModal(true)}
+            >
+              <HelpCircle size={15} /> 사용방법 및 주의사항
+            </button>
           </header>
 
           <div className="tp-body">
@@ -2118,6 +2233,9 @@
               {missingRequired && <span className="tp-warn">필수 항목을 확인해 주세요</span>}
             </div>
             <div className="tp-toolbar-btns">
+              <button className="tp-btn" onClick={() => setShowHelpModal(true)} style={{ background: "#f0f4ff", borderColor: "#adc6ff", color: "#1d39c4" }}>
+                <HelpCircle size={14} /> 사용방법 & 주의사항
+              </button>
               <button className="tp-btn" onClick={loadSampleData}>
                 <Upload size={14} /> 샘플 불러오기
               </button>
@@ -2136,6 +2254,75 @@
               </button>
             </div>
           </div>
+
+          {/* 사용방법 및 주의사항 모달 팝업 */}
+          {showHelpModal && (
+            <div className="tp-modal-overlay" onClick={() => setShowHelpModal(false)}>
+              <div className="tp-guide-modal" onClick={(e) => e.stopPropagation()}>
+                <div className="tp-guide-header">
+                  <div className="tp-guide-title">
+                    <HelpCircle size={18} color="#2b5ce7" />
+                    <span>전보희망원 작성 사용방법 & 주의사항</span>
+                  </div>
+                  <button type="button" className="tp-modal-close" onClick={() => setShowHelpModal(false)}>×</button>
+                </div>
+                <div className="tp-guide-body">
+                  <div className="tp-guide-section">
+                    <div className="tp-guide-subhead">
+                      <span>📘 단계별 작성 방법</span>
+                    </div>
+                    <div className="tp-guide-box info">
+                      <ol className="tp-guide-list">
+                        <li><b>기본정보 및 희망지 입력:</b> 좌측 사이드바에서 성명, 생년월일, 호봉, 경력연수 및 1~4희망 시·군/유치원을 입력하면 우측 서식 미리보기에 실시간 자동 반영됩니다.</li>
+                        <li><b>경력평정 자동 계산:</b> 근무 시작일·종료일과 지구/급지를 선택하면, <b>나이스(NEIS) 기준 30일=1월 및 자투리 일수 합산 규칙</b>에 따라 근무년수와 평정점이 자동으로 정밀 계산됩니다.</li>
+                        <li><b>파견·휴직 기간 자동 차감:</b> 육아휴직 등 경력 제외 기간은 <b>[⑦ 파견·휴직]</b>에 등록하면 해당 기간만큼 경력평정 기간에서 자동 감산 처리되어 실근무 기간으로 평정점이 산출됩니다.</li>
+                        <li><b>가산점(감점) 평정:</b> 표창, 연구점수, 연구유치원, 교육실습협력, 징계처분 등을 등록하면 연간 평정점과 개월 수에 따라 최종 점수가 계산됩니다.</li>
+                        <li><b>파일 저장 및 불러오기:</b> 작성 중 <b>[내보내기]</b>로 JSON 파일을 다운로드하여 PC에 안전하게 보관하고, 추후 <b>[불러오기]</b>로 언제든 다시 열어 수정할 수 있습니다.</li>
+                        <li><b>인쇄 및 PDF 다운로드:</b> 하단 <b>[인쇄 / PDF 저장]</b>을 누르면 강원특별자치도교육청 표준 A4 1장 서식으로 바로 출력하거나 PDF 파일로 저장할 수 있습니다.</li>
+                      </ol>
+                    </div>
+                  </div>
+
+                  <div className="tp-guide-section">
+                    <div className="tp-guide-subhead">
+                      <span>⚠️ 필수 확인 주의사항</span>
+                    </div>
+                    <div className="tp-guide-box warn">
+                      <ul className="tp-guide-list">
+                        <li><b>평정 기준일자 안내:</b>
+                          <ul style={{ paddingLeft: "16px", marginTop: "3px" }}>
+                            <li><b>호봉:</b> 해당 학년도 <b>1월 1일</b> 기준 (예: 근가1호봉은 41호봉으로 기재)</li>
+                            <li><b>교육총경력 / 관내근속 / 현유치원근속:</b> 해당 학년도 <b>2월 말일</b> 기준 (나이스 경력증명서 기준)</li>
+                          </ul>
+                        </li>
+                        <li><b>지구 및 급지 선택 기준 (2027 반영):</b>
+                          <ul style={{ paddingLeft: "16px", marginTop: "3px" }}>
+                            <li>일반지는 <b>1(일반지)</b>, <b>1(읍면)</b>, <b>4(일반지)</b>, <b>4(읍면)</b>, <b>2(일반지)</b>, <b>3(일반지)</b>로 선택합니다.</li>
+                            <li>벽지(특수지)는 <b>가, 나, 다, 라, 특급지</b>로 세분화되어 서식에 <code>1(다)</code>, <code>4(나)</code> 등으로 자동 표기됩니다.</li>
+                            <li>급지 구분이 모호한 경우 경력란의 <b>[기준표 보기]</b> 및 <b>[특급지 보기]</b> 버튼을 눌러 규정 원본을 확인하세요.</li>
+                          </ul>
+                        </li>
+                        <li><b>인쇄(PDF 저장) 시 브라우저 설정 (중요):</b>
+                          <ul style={{ paddingLeft: "16px", marginTop: "3px" }}>
+                            <li>인쇄 설정 창에서 <b>"배경 그래픽(Background graphics)"</b> 체크박스를 반드시 선택해야 표의 음영 및 서식이 정상 출력됩니다.</li>
+                            <li>용지 방향: <b>세로(Portrait)</b>, 여백: <b>기본(Default)</b></li>
+                          </ul>
+                        </li>
+                        <li><b>최종 확인 안내:</b>
+                          본 프로그램은 작성을 돕기 위한 보조 도구입니다. 최종 서류 제출 전 반드시 <b>소속 유치원 인사담당자 및 최신 강원특별자치도 교육공무원 인사관리 규정</b>을 대조·확인하시기 바랍니다.
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div className="tp-guide-footer">
+                  <button type="button" className="tp-btn primary" onClick={() => setShowHelpModal(false)}>
+                    확인 (닫기)
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* 이미지 모달 팝업 */}
           {activeImage && (
