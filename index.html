@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>유치원 전보희망원(관외) 작성 프로그램</title>
+  <title>강원특별자치도교육청 전보희망원(관외) 작성 도우미</title>
   
   <!-- React and ReactDOM CDNs -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
@@ -98,31 +98,73 @@
     /* ------------------------------------------------------------------ */
     const DISTRICT_ZONES = {
       "1지구": [
-        { code: "일반지(시동)", label: "춘천·원주·강릉 시동", annual: 12.0, monthly: 1.0 },
-        { code: "일반지(읍면)", label: "일반지 - 읍면", annual: 12.5, monthly: 1.041 },
-        { code: "다,라", label: "특수지 다,라급지", annual: 13.0, monthly: 1.083 },
-        { code: "가,나", label: "특수지 가,나급지", annual: 13.5, monthly: 1.125 },
-        { code: "특", label: "특급지(별표2)", annual: 14.0, monthly: 1.166 },
+        { code: "일반지", label: "1(일반지) · 춘천·원주·강릉 시동", annual: 12.0, monthly: 1.0 },
+        { code: "읍면", label: "1(읍면) · 춘천·원주·강릉 읍면", annual: 12.5, monthly: 1.041 },
+        { code: "다", label: "1(다) · 특수지 다급지", annual: 13.0, monthly: 1.083 },
+        { code: "라", label: "1(라) · 특수지 라급지", annual: 13.0, monthly: 1.083 },
+        { code: "가", label: "1(가) · 특수지 가급지", annual: 13.5, monthly: 1.125 },
+        { code: "나", label: "1(나) · 특수지 나급지", annual: 13.5, monthly: 1.125 },
+        { code: "특급지", label: "1(특급지) · 특급지(별표2)", annual: 14.0, monthly: 1.166 },
       ],
       "2지구": [
-        { code: "일반지(읍면)", label: "일반지 - 읍면", annual: 12.5, monthly: 1.041 },
-        { code: "다,라", label: "특수지 다,라급지", annual: 13.0, monthly: 1.083 },
-        { code: "가,나", label: "특수지 가,나급지", annual: 13.5, monthly: 1.125 },
-        { code: "특", label: "특급지(별표2)", annual: 14.0, monthly: 1.166 },
+        { code: "일반지", label: "2(일반지) · 속초(원감)", annual: 12.5, monthly: 1.041 },
+        { code: "다", label: "2(다) · 특수지 다급지", annual: 13.0, monthly: 1.083 },
+        { code: "라", label: "2(라) · 특수지 라급지", annual: 13.0, monthly: 1.083 },
+        { code: "가", label: "2(가) · 특수지 가급지", annual: 13.5, monthly: 1.125 },
+        { code: "나", label: "2(나) · 특수지 나급지", annual: 13.5, monthly: 1.125 },
+        { code: "특급지", label: "2(특급지) · 특급지(별표2)", annual: 14.0, monthly: 1.166 },
       ],
       "3지구": [
-        { code: "일반지", label: "일반지", annual: 13.5, monthly: 1.125 },
-        { code: "다,라", label: "특수지 다,라급지", annual: 14.0, monthly: 1.166 },
-        { code: "가,나", label: "특수지 가,나급지", annual: 14.5, monthly: 1.208 },
-        { code: "특", label: "특급지(별표2)", annual: 15.0, monthly: 1.250 },
+        { code: "일반지", label: "3(일반지) · 양양·홍천·횡성·화천·양구·속초(교사)·동해", annual: 13.5, monthly: 1.125 },
+        { code: "다", label: "3(다) · 특수지 다급지", annual: 14.0, monthly: 1.166 },
+        { code: "라", label: "3(라) · 특수지 라급지", annual: 14.0, monthly: 1.166 },
+        { code: "가", label: "3(가) · 특수지 가급지", annual: 14.5, monthly: 1.208 },
+        { code: "나", label: "3(나) · 특수지 나급지", annual: 14.5, monthly: 1.208 },
+        { code: "특급지", label: "3(특급지) · 특급지(별표2)", annual: 15.0, monthly: 1.250 },
       ],
       "4지구": [
-        { code: "일반지", label: "일반지", annual: 14.5, monthly: 1.208 },
-        { code: "다,라", label: "특수지 다,라급지", annual: 15.0, monthly: 1.250 },
-        { code: "가,나", label: "특수지 가,나급지", annual: 15.5, monthly: 1.291 },
-        { code: "특", label: "특급지(별표2)", annual: 16.0, monthly: 1.333 },
+        { code: "일반지", label: "4(일반지) · 삼척시동 일반지", annual: 14.5, monthly: 1.208 },
+        { code: "읍면", label: "4(읍면) · 삼척시읍면 및 기타 시군 일반지", annual: 15.0, monthly: 1.250 },
+        { code: "다", label: "4(다) · 특수지 다급지", annual: 15.0, monthly: 1.250 },
+        { code: "라", label: "4(라) · 특수지 라급지", annual: 15.0, monthly: 1.250 },
+        { code: "가", label: "4(가) · 특수지 가급지", annual: 15.5, monthly: 1.291 },
+        { code: "나", label: "4(나) · 특수지 나급지", annual: 15.5, monthly: 1.291 },
+        { code: "특급지", label: "4(특급지) · 특급지(별표2)", annual: 16.0, monthly: 1.333 },
       ],
     };
+
+    function getZoneDisplay(district, zone) {
+      if (!district || !zone) return "";
+      const d = district.replace("지구", "");
+      let z = zone;
+      if (z === "특") z = "특급지";
+      else if (z === "시동" || z === "일반지(시동)") z = "일반지";
+      else if (z === "일반지(읍면)") z = (d === "1" || d === "4") ? "읍면" : "일반지";
+      else if (z === "다,라") z = "다";
+      else if (z === "가,나") z = "가";
+      return `${d}(${z})`;
+    }
+
+    function findZoneData(district, zone) {
+      const list = DISTRICT_ZONES[district] || [];
+      const found = list.find((z) => z.code === zone);
+      if (found) return found;
+      // 레거시 호환
+      const dNum = district?.replace("지구", "");
+      if (zone === "시동" || zone === "일반지(시동)") {
+        return list.find((z) => z.code === "일반지") || list[0];
+      }
+      if (zone === "일반지(읍면)") {
+        return list.find((z) => (dNum === "1" || dNum === "4") ? z.code === "읍면" : z.code === "일반지") || list[0];
+      }
+      if (zone === "일반지") {
+        return list.find((z) => z.code === "일반지") || list[0];
+      }
+      if (zone === "다,라") return list.find((z) => z.code === "다") || list[0];
+      if (zone === "가,나") return list.find((z) => z.code === "가") || list[0];
+      if (zone === "특") return list.find((z) => z.code === "특급지") || list[0];
+      return list[0];
+    }
 
     const REASON_PRESETS = [
       "도지침 4-1)-①",
@@ -363,7 +405,7 @@
           start: "",
           end: "",
           district: "1지구",
-          zone: "일반지(시동)"
+          zone: "일반지"
         }
       ],
       dispatches: [],
@@ -418,7 +460,7 @@
         "nationalSchoolWish": false,
         "invitedTeacherApply": false,
         "otherProvinceApply": true,
-        "englishTraining: false": false,
+        "englishTraining": false,
         "specialProvision": false,
         "specialDetail": "",
         "deferralProvision": false,
@@ -441,7 +483,7 @@
           "start": "2023-03-01",
           "end": "2027-02-28",
           "district": "1지구",
-          "zone": "일반지(읍면)"
+          "zone": "읍면"
         },
         {
           "id": "ce09c50e-46d1-4e7f-83d2-5894c1c4f729",
@@ -449,7 +491,7 @@
           "start": "2021-03-01",
           "end": "2023-02-28",
           "district": "1지구",
-          "zone": "일반지(시동)"
+          "zone": "일반지"
         }
       ],
       "dispatches": [
@@ -706,7 +748,7 @@
       const careerRows = useMemo(
         () =>
           state.careers.map((c) => {
-            const zoneData = DISTRICT_ZONES[c.district]?.find((z) => z.code === c.zone);
+            const zoneData = findZoneData(c.district, c.zone);
             const annual = zoneData?.annual || 0;
             const monthly = zoneData?.monthly || 0;
             const net = getNetCalendarPeriod(c.start, c.end, state.dispatches);
@@ -738,7 +780,7 @@
         // 그룹(district + zone)별로 원본 기간(년, 월, 일)을 모두 합산한 후 30일=1월 룰을 최종 적용하여 소계를 계산합니다.
         const groups = {};
         careerRows.forEach((r) => {
-          const key = `${r.district}_${r.zone}`;
+          const key = getZoneDisplay(r.district, r.zone);
           if (!groups[key]) {
             groups[key] = {
               annual: r.annual,
@@ -1476,7 +1518,7 @@
                       </Field>
                       <Field label="급지">
                         <select value={c.zone} onChange={(e) => updateCareer(c.id, { zone: e.target.value })}>
-                          {DISTRICT_ZONES[c.district].map((z) => (
+                          {(DISTRICT_ZONES[c.district] || []).map((z) => (
                             <option key={z.code} value={z.code}>
                               {z.label} · 연 {z.annual}점 · 월 {z.monthly}점
                             </option>
@@ -1485,7 +1527,7 @@
                       </Field>
                     </div>
                     <span className="tp-score-pill">
-                      근무 {c.years}년 {c.months}월 · 서식표기 {c.district.replace("지구", "")}({c.zone}) · 평정점 {fmt(c.score)}점
+                      근무 {c.years}년 {c.months}월 · 서식표기 {getZoneDisplay(c.district, c.zone)} · 평정점 {fmt(c.score)}점
                     </span>
                   </div>
                 ))}
@@ -1911,7 +1953,7 @@
                           <td className="tp-val">{c?.schoolName || ""}</td>
                           <td className="tp-val">{c ? `${formatDateStr(c.start)}~${formatDateStr(c.end)}` : ""}</td>
                           <td className="tp-val">{c ? `${c.years}.${String(c.months).padStart(2, "0")}` : ""}</td>
-                          <td className="tp-val">{c ? `${c.district.replace("지구", "")}(${c.zone === "특" ? "특급지" : c.zone})` : ""}</td>
+                          <td className="tp-val">{c ? getZoneDisplay(c.district, c.zone) : ""}</td>
                           <td className="tp-val">{c ? fmt(c.score) : ""}</td>
                           {i === 0 && (
                             <td rowSpan={Math.max(4, careerRows.length) + Math.max(2, dispatchRows.length) + 1} className="tp-val" style={{ fontSize: "12px", fontWeight: "bold" }}>
