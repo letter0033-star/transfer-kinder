@@ -175,8 +175,9 @@
     }
 
     const REASON_PRESETS = [
-      "도지침 4-1)-①",
-      "도지침 4-1)-③",
+      "도지침 5-1)-①",
+      "도지침 5-1)-②",
+      "도지침 5-1)-③",
       "직접 입력",
     ];
 
@@ -397,13 +398,12 @@
         nationalSchoolWish: false,
         invitedTeacherApply: false,
         otherProvinceApply: false,
-        englishTraining: false,
         specialProvision: false,
         specialDetail: "",
         deferralProvision: false,
         deferralDetail: "",
       },
-      transferReason: REASON_PRESETS[1],
+      transferReason: REASON_PRESETS[0],
       transferReasonCustom: "",
       family: [],
       careers: [
@@ -468,13 +468,12 @@
         "nationalSchoolWish": false,
         "invitedTeacherApply": false,
         "otherProvinceApply": true,
-        "englishTraining": false,
         "specialProvision": false,
         "specialDetail": "",
         "deferralProvision": false,
         "deferralDetail": ""
       },
-      "transferReason": "도지침 4-1)-①",
+      "transferReason": "도지침 5-1)-①",
       "transferReasonCustom": "",
       "family": [
         {
@@ -1342,7 +1341,12 @@
 
           <header className="tp-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
             <div>
-              <h1>강원특별자치도교육청 전보희망원(관외) 작성 도우미 (유치원교사용)</h1>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+                <h1>강원특별자치도교육청 전보희망원(관외) 작성 도우미 (유치원교사용)</h1>
+                <span style={{ fontSize: "11px", fontWeight: "600", background: "rgba(255,255,255,0.18)", color: "#eef2ff", padding: "2px 8px", borderRadius: "10px", border: "1px solid rgba(255,255,255,0.3)" }}>
+                  2026.11.17. 업데이트
+                </span>
+              </div>
               <p>좌측에 정보를 입력하면 우측 미리보기에 실시간으로 반영됩니다 · 유치원교사 전보희망원 서식 지원</p>
             </div>
             <button
@@ -1502,10 +1506,9 @@
                 </Field>
                 <div className="tp-toggle-grid">
                   {[
-                    ["nationalSchoolWish", "국립학교희망"],
-                    ["invitedTeacherApply", "초빙교사지원"],
+                    ["nationalSchoolWish", "국립유치원 희망"],
+                    ["invitedTeacherApply", "수석교사 지원"],
                     ["otherProvinceApply", "타시도내신"],
-                    ["englishTraining", "영어장기연수"],
                   ].map(([key, label]) => (
                     <div className="tp-toggle" key={key}>
                       <span>{label}</span>
@@ -1568,8 +1571,9 @@
                   />
                 )}
                 <span className="tp-hint" style={{ marginTop: "10px", display: "block", lineHeight: "1.4" }}>
-                  도지침 4-1)-① 지구 만기자<br />
-                  도지침 4-1)-③ 전보 희망자
+                  도지침 5-1)-① 지구별 근무연한 만기자<br />
+                  도지침 5-1)-② 동일유치원(기관) 근무연한 만기자<br />
+                  도지침 5-1)-③ 전보 희망자
                 </span>
               </Section>
 
@@ -1988,13 +1992,12 @@
                 <table className="tp-doc-table" style={{ border: "2px solid #14213b" }}>
                   <thead>
                     <tr>
-                      <th style={{ width: "15%" }}>생활근거지</th>
-                      <th style={{ width: "14%" }}>국립학교희망</th>
-                      <th style={{ width: "14%" }}>초빙교사지원</th>
-                      <th style={{ width: "14%" }}>타시도내신</th>
-                      <th style={{ width: "15%" }}>영어장기연수</th>
-                      <th style={{ width: "14%" }}>특례조항</th>
-                      <th style={{ width: "14%" }}>유예조항</th>
+                      <th style={{ width: "18%" }}>생활근거지</th>
+                      <th style={{ width: "17%" }}>국립유치원희망</th>
+                      <th style={{ width: "17%" }}>수석교사지원</th>
+                      <th style={{ width: "16%" }}>타시도내신</th>
+                      <th style={{ width: "16%" }}>특례조항</th>
+                      <th style={{ width: "16%" }}>유예조항</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -2003,7 +2006,6 @@
                       <td className="tp-val">{state.flags.nationalSchoolWish ? "○" : "×"}</td>
                       <td className="tp-val">{state.flags.invitedTeacherApply ? "○" : "×"}</td>
                       <td className="tp-val">{state.flags.otherProvinceApply ? "○" : "×"}</td>
-                      <td className="tp-val">{state.flags.englishTraining ? "○" : "×"}</td>
                       <td className="tp-val">{state.flags.specialProvision ? "○" : "×"}</td>
                       <td className="tp-val">{state.flags.deferralProvision ? "○" : "×"}</td>
                     </tr>
