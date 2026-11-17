@@ -370,6 +370,16 @@
       return r.toString();
     }
 
+    function fmt1(n) {
+      const val = Number(n);
+      if (!Number.isFinite(val)) return "";
+      const r = Math.floor(val * 10 + 1e-9) / 10;
+      if (r < 0) {
+        return "△" + Math.abs(r).toFixed(1);
+      }
+      return r.toFixed(1);
+    }
+
     /* ------------------------------------------------------------------ */
     /* 초기 상태                                                             */
     /* ------------------------------------------------------------------ */
@@ -1480,10 +1490,10 @@
                   <div />
                 </div>
                 <div className="tp-row2">
-                  <Field label="1희망 학교명 ①">
+                  <Field label="1희망 유치원명 ①">
                     <input type="text" value={state.prefs.p1.school1} onChange={(e) => setPref("p1", { school1: e.target.value })} />
                   </Field>
-                  <Field label="1희망 학교명 ②">
+                  <Field label="1희망 유치원명 ②">
                     <input type="text" value={state.prefs.p1.school2} onChange={(e) => setPref("p1", { school2: e.target.value })} />
                   </Field>
                 </div>
@@ -1646,7 +1656,7 @@
                       </Field>
                     </div>
                     <span className="tp-score-pill">
-                      근무 {c.years}년 {c.months}월 · 서식표기 {getZoneDisplay(c.district, c.zone)} · 평정점 {fmt(c.score)}점
+                      근무 {c.years}년 {c.months}월 · 서식표기 {getZoneDisplay(c.district, c.zone)} · 평정점 {fmt1(c.score)}점
                     </span>
                   </div>
                 ))}
@@ -1659,7 +1669,7 @@
                      특급지 보기
                    </button>
                  </div>
-                 <span className="tp-hint">경력평정 소계(자동계산): {fmt(careerSubtotal)}점</span>
+                 <span className="tp-hint">경력평정 소계(자동계산): {fmt1(careerSubtotal)}점</span>
                </Section>
 
               <Section title="⑦ 파견·휴직" defaultOpen={false}>
@@ -1914,7 +1924,7 @@
                 <div style={{ display: "flex", alignItems: "stretch", marginTop: "4px", marginBottom: "8px", gap: "0" }}>
                   {/* 왼쪽: 문서 제목 (표 스타일 적용 안 함) */}
                   <div style={{
-                    width: "45%",
+                    width: "35%",
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "center",
@@ -1933,27 +1943,27 @@
                   </div>
 
                   {/* 오른쪽: 희망지 테이블 */}
-                  <div style={{ width: "55%" }}>
+                  <div style={{ width: "65%" }}>
                     <table className="tp-doc-table" style={{ width: "100%", height: "100%", margin: "0", border: "2px solid #14213b" }}>
                       <tbody>
                         <tr>
                           <th colSpan={3} style={{ height: "22px" }}>1희망</th>
-                          <th rowSpan={2} style={{ width: "16%" }}>2희망<br />시군명</th>
-                          <th rowSpan={2} style={{ width: "16%" }}>3희망<br />시군명</th>
-                          <th rowSpan={2} style={{ width: "18%" }}>4희망<br />시군명</th>
+                          <th rowSpan={2} style={{ width: "11%", whiteSpace: "nowrap" }}>2희망<br />시군명</th>
+                          <th rowSpan={2} style={{ width: "11%", whiteSpace: "nowrap" }}>3희망<br />시군명</th>
+                          <th rowSpan={2} style={{ width: "13%", whiteSpace: "nowrap" }}>4희망<br />시군명</th>
                         </tr>
                         <tr>
-                          <th style={{ width: "16%", height: "22px" }}>시군명</th>
-                          <th style={{ width: "17%" }}>유치원명①</th>
-                          <th style={{ width: "17%" }}>유치원명②</th>
+                          <th style={{ width: "11%", height: "22px", whiteSpace: "nowrap" }}>시군명</th>
+                          <th style={{ width: "27%", whiteSpace: "nowrap" }}>유치원명①</th>
+                          <th style={{ width: "27%", whiteSpace: "nowrap" }}>유치원명②</th>
                         </tr>
                         <tr>
-                          <td className="tp-val">{state.prefs.p1.county || ""}</td>
-                          <td className="tp-val">{state.prefs.p1.school1 || ""}</td>
-                          <td className="tp-val">{state.prefs.p1.school2 || ""}</td>
-                          <td className="tp-val">{state.districtExpired ? state.prefs.p2.county || "" : ""}</td>
-                          <td className="tp-val">{state.districtExpired ? state.prefs.p3.county || "" : ""}</td>
-                          <td className="tp-val">{state.districtExpired ? state.prefs.p4.county || "" : ""}</td>
+                          <td className="tp-val" style={{ whiteSpace: "nowrap" }}>{state.prefs.p1.county || ""}</td>
+                          <td className="tp-val" style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{state.prefs.p1.school1 || ""}</td>
+                          <td className="tp-val" style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{state.prefs.p1.school2 || ""}</td>
+                          <td className="tp-val" style={{ whiteSpace: "nowrap" }}>{state.districtExpired ? state.prefs.p2.county || "" : ""}</td>
+                          <td className="tp-val" style={{ whiteSpace: "nowrap" }}>{state.districtExpired ? state.prefs.p3.county || "" : ""}</td>
+                          <td className="tp-val" style={{ whiteSpace: "nowrap" }}>{state.districtExpired ? state.prefs.p4.county || "" : ""}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -2003,11 +2013,11 @@
                   <tbody>
                     <tr>
                       <td className="tp-val">{state.flags.livingBase || ""}</td>
-                      <td className="tp-val">{state.flags.nationalSchoolWish ? "○" : "×"}</td>
-                      <td className="tp-val">{state.flags.invitedTeacherApply ? "○" : "×"}</td>
-                      <td className="tp-val">{state.flags.otherProvinceApply ? "○" : "×"}</td>
-                      <td className="tp-val">{state.flags.specialProvision ? "○" : "×"}</td>
-                      <td className="tp-val">{state.flags.deferralProvision ? "○" : "×"}</td>
+                      <td className="tp-val">{state.flags.nationalSchoolWish ? "○" : ""}</td>
+                      <td className="tp-val">{state.flags.invitedTeacherApply ? "○" : ""}</td>
+                      <td className="tp-val">{state.flags.otherProvinceApply ? "○" : ""}</td>
+                      <td className="tp-val">{state.flags.specialProvision ? "○" : ""}</td>
+                      <td className="tp-val">{state.flags.deferralProvision ? "○" : ""}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -2071,10 +2081,10 @@
                           <td className="tp-val">{c ? `${formatDateStr(c.start)}~${formatDateStr(c.end)}` : ""}</td>
                           <td className="tp-val">{c ? `${c.years}.${String(c.months).padStart(2, "0")}` : ""}</td>
                           <td className="tp-val">{c ? getZoneDisplay(c.district, c.zone) : ""}</td>
-                          <td className="tp-val">{c ? fmt(c.score) : ""}</td>
+                          <td className="tp-val">{c ? fmt1(c.score) : ""}</td>
                           {i === 0 && (
                             <td rowSpan={Math.max(4, careerRows.length) + Math.max(2, dispatchRows.length) + 1} className="tp-val" style={{ fontSize: "12px", fontWeight: "bold" }}>
-                              {fmt(careerSubtotal)}
+                              {fmt1(careerSubtotal)}
                             </td>
                           )}
                         </tr>
@@ -2230,7 +2240,7 @@
               <div className="tp-total-circle">{fmt(totalScore)}</div>
               <div className="tp-total-text">
                 <b>총 평정점 {fmt(totalScore)}점</b>
-                경력 {fmt(careerSubtotal)} + 가산점 {fmt(bonusSubtotal)}
+                경력 {fmt1(careerSubtotal)} + 가산점 {fmt(bonusSubtotal)}
               </div>
               {missingRequired && <span className="tp-warn">필수 항목을 확인해 주세요</span>}
             </div>
