@@ -333,24 +333,39 @@
 
     function formatSchoolTitle(schoolName, teacherType) {
       const raw = (schoolName || "").trim();
-      if (!raw) return teacherType === "유치원교사" ? "○○유치원장" : "○○초등학교장";
+      const isElementaryTeacher = teacherType === "초등교사" || teacherType === "초등학교교사";
+      if (!raw) {
+        return isElementaryTeacher ? "○○초등학교장" : "○○유치원장";
+      }
 
-      if (teacherType === "유치원교사") {
-        if (raw.endsWith("유치원")) {
-          return raw + "장";
+      if (!isElementaryTeacher) {
+        // 끝부분의 직함/유치원 접미사 정리: 유치원장, 유치원, 유, 원장, 장 제거
+        const base = raw.replace(/(유치원장|유치원|유|원장|장)$/, "").trim();
+
+        // 초등학교병설유치원 판별:
+        // 1) 원본 또는 base에 "병설" 또는 "초등학교"가 포함되어 있는 경우
+        // 2) base가 "초"로 끝나는 경우 (예: 모산초, 남애초 등)
+        // 단, "초록", "초롱", "초원" 등 '초'로 시작하는 일반 유치원 이름 제외
+        const isAnnexed = raw.includes("병설") ||
+                          raw.includes("초등학교") ||
+                          (base.endsWith("초") && !/^초(록|롱|원)/.test(base));
+
+        if (isAnnexed) {
+          // 병설 및 초등학교/초 제거하여 기본 학교명(stem) 추출 (예: '모산초병설유' -> '모산')
+          let stem = base.replace(/병설$/, "").trim();
+          stem = stem.replace(/(초등학교|초)$/, "").trim();
+
+          if (stem) {
+            return `${stem}초등학교병설유치원장`;
+          }
+          return `${raw}장`;
+        } else {
+          // 일반 유치원 (단설, 사립 등): 기본 유치원명 + "유치원장"
+          return `${base}유치원장`;
         }
-        if (raw.endsWith("유")) {
-          return raw.slice(0, -1) + "유치원장";
-        }
-        return raw + "유치원장";
       } else {
-        if (raw.endsWith("초등학교")) {
-          return raw + "장";
-        }
-        if (raw.endsWith("초")) {
-          return raw.slice(0, -1) + "초등학교장";
-        }
-        return raw + "초등학교장";
+        const name = raw.replace(/(초등학교장|초등학교|초장|초|학교장|장)$/, "").trim();
+        return `${name}초등학교장`;
       }
     }
 
